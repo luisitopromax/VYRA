@@ -627,4 +627,369 @@ function startGame(){
  const inputs=[...$("nameFields").querySelectorAll("input")];
  const names=inputs.map(x=>x.value.trim());
  if(names.some(x=>!x)){
-  alert("Escriban el nombre de todos los participantes.")
+  alert("Escriban el nombre de todos los participantes.");
+  return;
+ }
+ if(new Set(names.map(x=>x.toLowerCase())).size!==names.length){
+  alert("Cada participante debe tener un nombre diferente.");
+  return;
+ }
+ game.names=names;
+ game.scores=names.map(()=>0);
+ game.remaining=names.map((_,i)=>i);
+ game.current=-1;
+ game.used={verdad:[],reto:[]};
+ game.round=1;
+ game.turn=0;
+ renderWheel();
+ openScreen("wheelScreen");
+}
+
+/* RULETA */
+function renderWheel(){
+ const wheel=$("wheel");
+ wheel.querySelectorAll(".wheel-name").forEach(e=>e.remove());
+ const n=game.names.length;
+ const colors=["#47216b","#241331","#61318a","#301541"];
+ wheel.style.background=`conic-gradient(${game.names.map((name,i)=>{
+  const start=i*360/n,end=(i+1)*360/n;
+  return `${colors[i%colors.length]} ${start}deg ${end}deg`;
+ }).join(",")})`;
+ game.names.forEach((name,i)=>{
+  const label=document.createElement("div");
+  label.className="wheel-name";
+  const angle=(360/n)*i+(180/n);
+  label.style.transform=`rotate(${angle}deg) translateY(-50%)`;
+  label.textContent=name;
+  wheel.appendChild(label);
+ });
+ wheel.style.transition="none";
+ wheel.style.transform="rotate(0deg)";
+ $("chosenName").classList.add("hidden");
+ $("spinBtn").disabled=false;
+ $("wheelStatus").textContent="Pulsa para girar la ruleta.";
+ game.spinning=false;
+}
+
+function spinWheel(){
+ if(game.spinning)return;
+ if(!game.remaining.length){
+  game.remaining=game.names.map((_,i)=>i);
+  game.round++;
+ }
+ const eligible=[...game.remaining];
+ const chosen=eligible[Math.floor(Math.random()*eligible.length)];
+ game.remaining=game.remaining.filter(i=>i!==chosen);
+ game.current=chosen;
+ game.spinning=true;
+ $("spinBtn").disabled=true;
+ $("wheelStatus").textContent="¡La ruleta está girando!";
+ const n=game.names.length;
+ const segment=360/n;
+ const desired=360-(chosen*segment+segment/2);
+ const angle=360*6+desired;
+ const wheel=$("wheel");
+ wheel.style.transition="transform 3.5s cubic-bezier(.12,.75,.12,1)";
+ wheel.style.transform=`rotate(${angle}deg)`;
+ setTimeout(()=>{
+  game.spinning=false;
+  $("chosenName").textContent="♛ "+game.names[chosen]+" ♛";
+  $("chosenName").classList.remove("hidden");
+  $("wheelStatus").textContent="¡Jugador seleccionado!";
+  setTimeout(()=>{
+   $("turnName").textContent="Turno de "+game.names[chosen];
+   openScreen("choice");
+  },900);
+ },3600);
+}
+
+/* TARJETAS */
+function getCards(type){
+ const base=content[type][game.level];
+ const custom=(data.custom[type]||{})[game.level]||[];
+ return [...base,...custom];
+}
+
+function drawCard(type){
+ const cards=getCards(type);
+ if(!cards.length)return;
+ if(game.used[type].length>=cards.length)game.used[type]=[];
+ const available=cards.map((_,i)=>i).filter(i=>!game.used[type].includes(i));
+ const index=available[Math.floor(Math.random()*available.length)];
+ game.used[type].push(index);
+ $("cardHeader").textContent=(type==="verdad"?"💬 VERDAD":"⚡ RETO")+" · "+game.names[game.current];
+ $("questionText").textContent=cards[index];
+ openScreen("card");
+}
+
+/* TURNOS Y PUNTOS */
+function completeTurn(){
+ game.scores[game.current]+=10;
+ game.turn++;
+ renderScores();
+ openScreen("score");
+}
+function skipTurn(){
+ game.turn++;
+ renderScores();
+ openScreen("score");
+}
+function renderScores(){
+ $("roundInfo").textContent="Ronda "+game.round+" · Turno "+game.turn;
+ $("scoreList").innerHTML="";
+ game.names.forEach((name,i)=>{
+  const row=document.createElement("div");
+  row.className="score-row";
+  const label=document.createElement("span");
+  label.textContent=(i===game.current?"👑 ":"")+name;
+  const points=document.createElement("b");
+  points.textContent=game.scores[i]+" ⭐";
+  row.append(label,points);
+  $("scoreList").appendChild(row);
+ });
+}
+function nextTurn(){
+ if(game.remaining.length===0){
+  finishGame();
+  return;
+ }
+ renderWheel();
+ openScreen("wheelScreen");
+}
+function finishGame(){
+ const ranking=game.names.map((name,i)=>({name,score:game.scores[i]}))
+  .sort((a,b)=>b.score-a.score);
+ data.history.unshift({
+  date:new Date().toLocaleDateString("es-BO"),
+  mode:game.mode,level:intensity[game.level].name,
+  ranking
+ });
+ data.history=data.history.slice(0,40);
+ saveData();
+ $("roundInfo").textContent="¡Todos participaron! Resultado final:";
+ $("scoreList").innerHTML="";
+ ranking.forEach((p,i)=>{
+  const row=document.createElement("div");
+  row.className="score-row";
+  const name=document.createElement("span");
+  name.textContent=(i===0?"🏆 ":`${i+1}. `)+p.name;
+  const score=document.createElement("b");
+  score.textContent=p.score+" ⭐";
+  row.append(name,score);
+  $("scoreList").appendChild(row);
+ });
+ $("score").querySelector(".actions").innerHTML="";
+ const btn=document.createElement("button");
+ btn.className="btn gold";
+ btn.textContent="Volver al menú";
+ btn.onclick=()=>openScreen("menu");
+ $("score").querySelector(".actions").appendChild(btn);
+ openScreen("score");
+}
+
+/* MEDIA NARANJA */
+const interestOptions=[
+ "🎮 Videojuegos","🎵 Música","🎬 Películas",
+ "⚽ Deportes","💻 Tecnología","✈️ Viajes",
+ "🎨 Arte","🐾 Animales","📚 Lectura",
+ "🍳 Cocina","🌌 Astronomía","🎤 Cantar"
+];
+let selectedInterests=new Set();
+
+function renderInterestGrid(){
+ selectedInterests.clear();
+ $("interestGrid").innerHTML="";
+ interestOptions.forEach(value=>{
+  const button=document.createElement("button");
+  button.className="interest";
+  button.textContent=value;
+  button.onclick=()=>{
+   if(selectedInterests.has(value)){
+    selectedInterests.delete(value);
+    button.classList.remove("on");
+   }else{
+    selectedInterests.add(value);
+    button.classList.add("on");
+   }
+  };
+  $("interestGrid").appendChild(button);
+ });
+}
+function addMatchPlayer(){
+ const name=$("matchName").value.trim();
+ if(!name||selectedInterests.size<2){
+  alert("Escribe un nombre y selecciona al menos dos intereses.");
+  return;
+ }
+ if(data.matchPlayers.some(p=>p.name.toLowerCase()===name.toLowerCase())){
+  alert("Ese nombre ya está registrado.");
+  return;
+ }
+ data.matchPlayers.push({name,interests:[...selectedInterests]});
+ saveData();
+ $("matchName").value="";
+ renderInterestGrid();
+ renderMatchPlayers();
+}
+function renderMatchPlayers(){
+ $("matchPlayers").innerHTML="";
+ data.matchPlayers.forEach((p,i)=>{
+  const row=document.createElement("div");
+  row.className="score-row";
+  const name=document.createElement("span");
+  name.textContent=p.name+" · "+p.interests.length+" intereses";
+  const del=document.createElement("button");
+  del.className="mini";
+  del.textContent="Eliminar";
+  del.onclick=()=>{
+   data.matchPlayers.splice(i,1);
+   saveData();
+   renderMatchPlayers();
+  };
+  row.append(name,del);
+  $("matchPlayers").appendChild(row);
+ });
+}
+function finishMatches(){
+ const players=data.matchPlayers;
+ if(players.length<2){
+  alert("Necesitas al menos dos participantes.");
+  return;
+ }
+ const pairs=[];
+ for(let i=0;i<players.length;i++){
+  for(let j=i+1;j<players.length;j++){
+   const common=players[i].interests.filter(x=>players[j].interests.includes(x));
+   pairs.push({a:players[i].name,b:players[j].name,common});
+  }
+ }
+ pairs.sort((a,b)=>b.common.length-a.common.length);
+ $("matchResult").innerHTML="<h3>Coincidencias</h3>";
+ pairs.forEach(p=>{
+  const row=document.createElement("div");
+  row.className="panel";
+  const title=document.createElement("strong");
+  title.textContent=p.a+" 💜 "+p.b;
+  const detail=document.createElement("p");
+  detail.className="note";
+  detail.textContent=p.common.length
+   ?p.common.join(" · ")+" · "+p.common.length+" coincidencias"
+   :"Todavía no tienen intereses en común.";
+  row.append(title,detail);
+  $("matchResult").appendChild(row);
+ });
+}
+
+/* EDITOR */
+function renderEditor(button){
+ if(button){
+  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+  button.classList.add("active");
+ }
+ const select=$("editorLevel");
+ const old=select.value;
+ select.innerHTML="";
+ intensity.forEach((v,i)=>{
+  const option=document.createElement("option");
+  option.value=i;
+  option.textContent=v.name;
+  select.appendChild(option);
+ });
+ select.value=old||"0";
+ select.onchange=renderEditorList;
+ renderEditorList();
+}
+function renderEditorList(){
+ const level=Number($("editorLevel").value);
+ const cards=(data.custom[editorType]||{})[level]||[];
+ $("editorList").innerHTML="";
+ if(!cards.length){
+  $("editorList").innerHTML='<p class="note">No hay tarjetas personalizadas en esta intensidad.</p>';
+  return;
+ }
+ cards.forEach((card,i)=>{
+  const row=document.createElement("div");
+  row.className="score-row";
+  const text=document.createElement("span");
+  text.textContent=card;
+  const del=document.createElement("button");
+  del.className="mini";
+  del.textContent="Eliminar";
+  del.onclick=()=>{
+   cards.splice(i,1);
+   saveData();
+   renderEditorList();
+  };
+  row.append(text,del);
+  $("editorList").appendChild(row);
+ });
+}
+function addCustomCard(){
+ const value=$("newCard").value.trim();
+ const level=Number($("editorLevel").value);
+ if(!value){
+  alert("Escribe primero una tarjeta.");
+  return;
+ }
+ data.custom[editorType][level]=data.custom[editorType][level]||[];
+ data.custom[editorType][level].push(value);
+ $("newCard").value="";
+ saveData();
+ renderEditorList();
+}
+
+/* HISTORIAL */
+function renderHistory(){
+ $("historyList").innerHTML="";
+ if(!data.history.length){
+  $("historyList").innerHTML='<p class="note">Todavía no hay partidas registradas.</p>';
+  return;
+ }
+ data.history.forEach(item=>{
+  const row=document.createElement("div");
+  row.className="score-row";
+  const name=document.createElement("span");
+  name.textContent=item.date+" · "+(item.mode==="couple"?"Pareja":"Grupal")+" · "+item.level;
+  const winner=document.createElement("b");
+  winner.textContent=item.ranking[0]?.name||"";
+  row.append(name,winner);
+  $("historyList").appendChild(row);
+ });
+}
+function clearHistory(){
+ if(confirm("¿Borrar todo el historial?")){
+  data.history=[];
+  saveData();
+  renderHistory();
+ }
+}
+
+/* PERFIL Y AJUSTES */
+function saveProfile(){
+ data.profile={
+  name:$("profileName").value.trim(),
+  bio:$("profileBio").value.trim()
+ };
+ saveData();
+ alert("Perfil guardado.");
+}
+$("soundSetting").addEventListener("change",e=>{
+ data.settings.sound=e.target.checked;saveData();
+});
+$("motionSetting").addEventListener("change",e=>{
+ data.settings.motion=e.target.checked;saveData();
+ document.body.style.animation=e.target.checked?"":"none";
+});
+function resetData(){
+ if(confirm("¿Seguro que quieres borrar los datos de VYRA?")){
+  localStorage.removeItem(STORAGE_KEY);
+  location.reload();
+ }
+}
+
+/* INICIALIZACIÓN */
+$("editorLevel").value="0";
+renderEditor();
+</script>
+</body>
+</html>
