@@ -1,0 +1,630 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#100817">
+<title>VYRA | The Connection Experience</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Manrope:wght@400;500;700;800&display=swap');
+
+:root {
+ --bg:#09050f;
+ --panel:#170d22;
+ --purple:#a855f7;
+ --violet:#6d28a8;
+ --gold:#e8c477;
+ --pink:#ed8bea;
+ --white:#fff4ff;
+ --muted:#c3afce;
+ --border:#694184;
+}
+
+*{box-sizing:border-box}
+body{
+ margin:0;
+ min-height:100vh;
+ color:var(--white);
+ font-family:Manrope,sans-serif;
+ background:
+ radial-gradient(ellipse at 50% 0%,#48205e 0%,#1a0c27 38%,#09050f 85%);
+ background-attachment:fixed;
+}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer;color:inherit}
+button:disabled{opacity:.4;cursor:not-allowed}
+.app{max-width:850px;margin:auto;padding:16px}
+header{
+ display:flex;justify-content:space-between;
+ align-items:center;margin-bottom:20px;
+}
+.logo{
+ font-family:Cinzel,serif;font-size:28px;
+ letter-spacing:5px;color:#d8a9ff;
+ text-shadow:0 0 18px var(--purple);
+}
+.logo small{
+ display:block;font:9px Manrope;
+ letter-spacing:2px;color:var(--gold);
+}
+.screen{display:none;animation:appear .3s}
+.screen.active{display:block}
+@keyframes appear{
+ from{opacity:0;transform:translateY(7px)}
+ to{opacity:1;transform:translateY(0)}
+}
+.hero{text-align:center;padding:30px 10px}
+.crown{font-size:42px;color:var(--gold)}
+h1{
+ font:700 clamp(45px,12vw,75px) Cinzel;
+ color:#d8a9ff;letter-spacing:5px;
+ text-shadow:0 0 25px var(--purple);
+ margin:5px 0;
+}
+h2{font:700 27px Cinzel;color:#e5c8ff}
+h3{font:700 17px Cinzel;color:var(--gold)}
+p{line-height:1.6}
+.sub,.note{color:var(--muted)}
+.note{font-size:12px}
+.panel{
+ background:linear-gradient(145deg,#291638,#100918);
+ border:1px solid var(--border);
+ border-radius:19px;padding:19px;margin:13px 0;
+ box-shadow:0 12px 30px #0008;
+}
+.grid{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(135px,1fr));
+ gap:11px;
+}
+.mode,.level,.choice{
+ background:linear-gradient(145deg,#321849,#130a1d);
+ border:1px solid #794a99;
+ border-radius:16px;padding:16px 10px;
+ text-align:center;min-height:105px;
+ transition:.2s;
+}
+.mode:hover,.level:hover,.choice:hover{
+ border-color:var(--gold);
+ box-shadow:0 0 18px #a855f755;
+ transform:translateY(-2px);
+}
+.mode .icon,.choice .icon{font-size:29px;display:block;margin-bottom:8px}
+.mode strong,.level strong{display:block;font-size:14px}
+.mode span,.level span{
+ display:block;font-size:11px;color:var(--muted);
+ margin-top:6px;line-height:1.4;
+}
+.level.selected{
+ border-color:var(--gold);
+ background:#49245b;
+ box-shadow:0 0 20px #e8c47755;
+}
+.btn{
+ border:1px solid #b76bea;
+ background:linear-gradient(100deg,#702ca8,#35134d);
+ padding:12px 20px;border-radius:50px;
+ font-weight:800;box-shadow:0 0 16px #8b35cb44;
+}
+.btn.gold{
+ background:linear-gradient(100deg,#93651f,#503311);
+ border-color:var(--gold);color:#fff4d7;
+}
+.btn.ghost{background:#160d22;border-color:var(--border);box-shadow:none}
+.btn.red{background:#51182b;border-color:#a83d61}
+.actions{
+ display:flex;justify-content:center;
+ flex-wrap:wrap;gap:10px;margin-top:18px;
+}
+.field{display:block;margin:13px 0;font-size:13px;color:var(--muted)}
+.field input,.field textarea,.field select{
+ width:100%;display:block;margin-top:7px;
+ padding:12px;border-radius:11px;
+ border:1px solid var(--border);
+ background:#0c0712;color:white;
+}
+.field textarea{min-height:85px;resize:vertical}
+.names{display:grid;gap:5px}
+.hidden{display:none!important}
+.badge{
+ display:inline-block;padding:5px 11px;
+ border:1px solid var(--gold);border-radius:30px;
+ color:var(--gold);font-size:11px;
+}
+.wheel-area{text-align:center;margin:20px auto}
+.pointer{font-size:28px;color:var(--gold);margin-bottom:-8px;position:relative;z-index:2}
+.wheel{
+ width:min(78vw,330px);height:min(78vw,330px);
+ margin:auto;border:7px solid var(--gold);
+ border-radius:50%;position:relative;
+ box-shadow:0 0 0 5px #4a2460,0 0 30px #b76bea88;
+ background:conic-gradient(#47216b 0 60deg,#1d1029 60deg 120deg,#60318a 120deg 180deg,#21102e 180deg 240deg,#4b2370 240deg 300deg,#21102e 300deg);
+}
+.wheel-name{
+ position:absolute;left:50%;top:50%;
+ width:44%;transform-origin:0 0;
+ text-align:center;font-size:12px;font-weight:800;
+ text-shadow:0 2px 5px black;
+ overflow:hidden;white-space:nowrap;
+}
+.wheel-center{
+ position:absolute;inset:44%;border-radius:50%;
+ background:radial-gradient(circle,#ffe6a5,#9d681f);
+ border:3px solid #fff0c0;z-index:2;
+}
+.chosen{
+ text-align:center;font:700 23px Cinzel;
+ color:var(--gold);margin:18px 0;
+}
+.card-question{
+ min-height:140px;display:grid;place-items:center;
+ text-align:center;padding:24px;
+ border:1px solid var(--gold);border-radius:17px;
+ background:radial-gradient(ellipse at top,#38204a,#0c0712);
+ font:600 20px Cinzel;line-height:1.6;
+}
+.score-list{display:grid;gap:8px}
+.score-row{
+ display:flex;justify-content:space-between;
+ align-items:center;gap:10px;
+ padding:11px 13px;background:#100918;
+ border:1px solid var(--border);border-radius:11px;
+}
+.score-row b{color:var(--gold)}
+.tabs{display:flex;gap:7px;flex-wrap:wrap}
+.tab{
+ border:1px solid var(--border);border-radius:30px;
+ background:#100918;padding:8px 12px;font-size:12px;
+}
+.tab.active{border-color:var(--gold);background:#51266d}
+.interests{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.interest{
+ background:#100918;border:1px solid var(--border);
+ padding:12px;border-radius:11px;text-align:left;
+}
+.interest.on{border-color:var(--gold);background:#382044}
+.footer{text-align:center;color:#927da1;font-size:11px;margin:28px 0}
+@media(min-width:600px){
+ .app{padding:25px}
+ .hero{padding:45px 15px}
+ .panel{padding:25px}
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<header>
+ <div class="logo">VYRA<small>THE CONNECTION EXPERIENCE</small></div>
+ <button class="btn ghost" onclick="openScreen('settings')">⚙️</button>
+</header>
+
+<!-- INICIO -->
+<section class="screen active" id="home">
+ <div class="hero">
+  <div class="crown">♛</div>
+  <h1>VYRA</h1>
+  <p class="sub">VERDAD · RETO · CONEXIÓN</p>
+  <div style="color:var(--gold);font-family:Cinzel">Una creación de VEDANNYLOVE ♡</div>
+ </div>
+ <div class="panel" style="text-align:center">
+  <p class="sub">Una experiencia donde cada decisión crea una historia.</p>
+  <button class="btn gold" onclick="openScreen('menu')">ENTRAR A VYRA ➜</button>
+ </div>
+ <div class="actions">
+  <button class="btn ghost" onclick="openScreen('profile')">👤 Perfil</button>
+  <button class="btn ghost" onclick="openScreen('history')">🏆 Historial</button>
+ </div>
+</section>
+
+<!-- MENU -->
+<section class="screen" id="menu">
+ <div class="hero">
+  <h2>Menú principal</h2>
+  <p class="sub">Elige tu experiencia</p>
+ </div>
+ <div class="grid">
+  <button class="mode" onclick="selectMode('couple')">
+   <span class="icon">💜</span><strong>Modo Pareja</strong>
+   <span>2 participantes</span>
+  </button>
+  <button class="mode" onclick="selectMode('group')">
+   <span class="icon">👥</span><strong>Modo Grupal</strong>
+   <span>De 2 a 12 participantes</span>
+  </button>
+  <button class="mode" onclick="selectMode('match')">
+   <span class="icon">💞</span><strong>Encuentra tu Media Naranja</strong>
+   <span>Conexiones por intereses</span>
+  </button>
+ </div>
+ <div class="actions">
+  <button class="btn ghost" onclick="openScreen('editor')">✎ Editor</button>
+  <button class="btn ghost" onclick="openScreen('history')">🏆 Historial</button>
+ </div>
+</section>
+
+<!-- CONFIGURACION -->
+<section class="screen" id="setup">
+ <div class="panel">
+  <h2 id="setupTitle">Configurar partida</h2>
+  <p class="sub" id="setupDesc"></p>
+  <div id="countWrap" class="field hidden">
+   Número de jugadores
+   <div class="actions">
+    <button class="btn ghost" onclick="changeCount(-1)">−</button>
+    <strong id="countValue">4</strong>
+    <button class="btn ghost" onclick="changeCount(1)">+</button>
+   </div>
+  </div>
+  <div id="nameFields" class="names"></div>
+
+  <h3>Intensidad del juego</h3>
+  <p class="note">Selecciona el ambiente de la partida. Todos pueden pasar cualquier tarjeta sin presión.</p>
+  <div class="grid" id="levelGrid"></div>
+
+  <div class="actions">
+   <button class="btn ghost" onclick="openScreen('menu')">Volver</button>
+   <button class="btn gold" onclick="startGame()">Comenzar ➜</button>
+  </div>
+ </div>
+</section>
+
+<!-- RULETA -->
+<section class="screen" id="wheelScreen">
+ <div class="panel">
+  <h2 style="text-align:center">Ruleta VYRA</h2>
+  <p class="sub" style="text-align:center">¿Quién será el siguiente?</p>
+  <div class="wheel-area">
+   <div class="pointer">▼</div>
+   <div class="wheel" id="wheel">
+    <div class="wheel-center"></div>
+   </div>
+   <p class="sub" id="wheelStatus">La suerte está en tus manos.</p>
+  </div>
+  <div class="chosen hidden" id="chosenName"></div>
+  <div class="actions">
+   <button class="btn gold" id="spinBtn" onclick="spinWheel()">GIRAR RULETA</button>
+  </div>
+ </div>
+</section>
+
+<!-- VERDAD O RETO -->
+<section class="screen" id="choice">
+ <div class="panel">
+  <div class="chosen" id="turnName"></div>
+  <h2 style="text-align:center">¿Qué eliges?</h2>
+  <p class="sub" style="text-align:center">Elige una tarjeta para descubrirla.</p>
+  <div class="grid">
+   <button class="choice" onclick="drawCard('verdad')">
+    <span class="icon">💬</span><strong>VERDAD</strong>
+    <span class="note">Responde sinceramente</span>
+   </button>
+   <button class="choice" onclick="drawCard('reto')">
+    <span class="icon">⚡</span><strong>RETO</strong>
+    <span class="note">Acepta el desafío</span>
+   </button>
+  </div>
+  <div class="actions">
+   <button class="btn ghost" onclick="skipTurn()">Pasar turno</button>
+  </div>
+ </div>
+</section>
+
+<!-- TARJETA -->
+<section class="screen" id="card">
+ <div class="panel">
+  <div class="chosen" id="cardHeader"></div>
+  <div class="card-question" id="questionText"></div>
+  <p class="note" style="text-align:center">
+   Respeta los límites de todos. Puedes pasar cualquier tarjeta.
+  </p>
+  <div class="actions">
+   <button class="btn ghost" onclick="skipTurn()">Pasar</button>
+   <button class="btn gold" onclick="completeTurn()">¡Completado! +10 ⭐</button>
+  </div>
+ </div>
+</section>
+
+<!-- PUNTUACION -->
+<section class="screen" id="score">
+ <div class="panel">
+  <h2 style="text-align:center">Puntuación</h2>
+  <p class="sub" id="roundInfo" style="text-align:center"></p>
+  <div class="score-list" id="scoreList"></div>
+  <div class="actions">
+   <button class="btn ghost" onclick="openScreen('menu')">Terminar</button>
+   <button class="btn gold" onclick="nextTurn()">Siguiente turno ➜</button>
+  </div>
+ </div>
+</section>
+
+<!-- MEDIA NARANJA -->
+<section class="screen" id="match">
+ <div class="panel">
+  <h2>Encuentra tu Media Naranja 💞</h2>
+  <p class="sub">Los participantes seleccionan sus intereses. VYRA calcula cuáles coinciden.</p>
+  <div class="field">Nombre del participante
+   <input id="matchName" maxlength="24" placeholder="Tu nombre">
+  </div>
+  <div id="interestGrid" class="interests"></div>
+  <div class="actions">
+   <button class="btn gold" onclick="addMatchPlayer()">Guardar intereses</button>
+   <button class="btn ghost" onclick="finishMatches()">Ver conexiones</button>
+   <button class="btn ghost" onclick="openScreen('menu')">Volver</button>
+  </div>
+  <div id="matchPlayers" class="score-list"></div>
+  <div id="matchResult"></div>
+ </div>
+</section>
+
+<!-- EDITOR -->
+<section class="screen" id="editor">
+ <div class="panel">
+  <h2>Editor de contenido</h2>
+  <p class="sub">Personaliza las tarjetas de VYRA.</p>
+  <div class="tabs">
+   <button class="tab active" onclick="editorType='verdad';renderEditor(this)">Verdades</button>
+   <button class="tab" onclick="editorType='reto';renderEditor(this)">Retos</button>
+  </div>
+  <label class="field">Intensidad
+   <select id="editorLevel"></select>
+  </label>
+  <label class="field">Nueva tarjeta
+   <textarea id="newCard" maxlength="250" placeholder="Escribe aquí tu pregunta o reto..."></textarea>
+  </label>
+  <button class="btn gold" onclick="addCustomCard()">Guardar tarjeta</button>
+  <div class="score-list" id="editorList" style="margin-top:15px"></div>
+  <div class="actions"><button class="btn ghost" onclick="openScreen('menu')">Volver</button></div>
+ </div>
+</section>
+
+<!-- HISTORIAL -->
+<section class="screen" id="history">
+ <div class="panel">
+  <h2>Historial de partidas</h2>
+  <div class="score-list" id="historyList"></div>
+  <div class="actions">
+   <button class="btn ghost" onclick="openScreen('menu')">Volver</button>
+   <button class="btn red" onclick="clearHistory()">Borrar historial</button>
+  </div>
+ </div>
+</section>
+
+<!-- PERFIL -->
+<section class="screen" id="profile">
+ <div class="panel">
+  <h2>Mi perfil</h2>
+  <label class="field">Nombre
+   <input id="profileName" maxlength="30">
+  </label>
+  <label class="field">Descripción
+   <input id="profileBio" maxlength="80">
+  </label>
+  <button class="btn gold" onclick="saveProfile()">Guardar perfil</button>
+  <div class="actions"><button class="btn ghost" onclick="openScreen('menu')">Volver</button></div>
+ </div>
+</section>
+
+<!-- AJUSTES -->
+<section class="screen" id="settings">
+ <div class="panel">
+  <h2>Ajustes</h2>
+  <label class="field"><input type="checkbox" id="soundSetting"> Activar sonido</label>
+  <label class="field"><input type="checkbox" id="motionSetting" checked> Animaciones</label>
+  <p class="note">Tus datos se almacenan en este navegador. Si borras sus datos, podrías perder tus partidas y tarjetas.</p>
+  <div class="actions">
+   <button class="btn ghost" onclick="openScreen('menu')">Volver</button>
+   <button class="btn red" onclick="resetData()">Restablecer todo</button>
+  </div>
+ </div>
+</section>
+
+<footer class="footer">VYRA · THE CONNECTION EXPERIENCE<br>Una creación de VEDANNYLOVE ♡</footer>
+</div>
+
+<script>
+"use strict";
+
+/* ALMACENAMIENTO */
+const STORAGE_KEY="vyra_complete_v1";
+function loadData(){
+ try{
+  const d=JSON.parse(localStorage.getItem(STORAGE_KEY));
+  if(d && typeof d==="object") return d;
+ }catch(e){}
+ return {
+  custom:{verdad:{},reto:{}},
+  history:[],
+  profile:{name:"",bio:""},
+  matchPlayers:[],
+  settings:{sound:false,motion:true}
+ };
+}
+let data=loadData();
+function saveData(){
+ try{localStorage.setItem(STORAGE_KEY,JSON.stringify(data))}
+ catch(e){alert("No se pudieron guardar los datos del navegador.")}
+}
+
+/* INTENSIDADES */
+const intensity=[
+ {name:"SUAVE",icon:"🌙",desc:"Preguntas tranquilas y sencillas"},
+ {name:"DIVERTIDO",icon:"🎉",desc:"Humor, risas y ocurrencias"},
+ {name:"ATREVIDO",icon:"🔥",desc:"Confesiones y desafíos sociales"},
+ {name:"EXTREMO",icon:"⚡",desc:"Desafíos creativos y sorprendentes"},
+ {name:"ESPECIAL",icon:"👑",desc:"Preguntas profundas y personalizadas"}
+];
+
+const content={
+ verdad:[
+  [
+   "¿Qué cosa sencilla te hace feliz?",
+   "¿Cuál es tu recuerdo favorito de la infancia?",
+   "¿Qué lugar te gustaría visitar?",
+   "¿Qué cualidad valoras más en una persona?",
+   "¿Qué sueño quieres cumplir?"
+  ],
+  [
+   "¿Cuál es tu momento más gracioso?",
+   "¿Qué canción cantarías en un karaoke?",
+   "¿Qué personaje de película serías?",
+   "¿Qué comida podrías comer todos los días?",
+   "¿Cuál fue tu apodo más curioso?"
+  ],
+  [
+   "¿Alguna vez fingiste entender algo para no preguntar?",
+   "¿Qué opinión tuya suele sorprender a los demás?",
+   "¿Qué es algo que te cuesta admitir?",
+   "¿Cuál fue tu mayor vergüenza divertida?",
+   "¿Qué te gustaría atreverte a hacer algún día?"
+  ],
+  [
+   "¿Qué decisión importante te costó tomar?",
+   "¿Qué miedo te gustaría superar?",
+   "¿Qué cambiarías de tu rutina?",
+   "¿Qué reto personal te gustaría cumplir?",
+   "¿Cuándo fue la última vez que saliste de tu zona de confort?"
+  ],
+  [
+   "¿Qué significa para ti una conexión verdadera?",
+   "¿Qué recuerdo quisieras conservar para siempre?",
+   "¿Qué te gustaría que los demás comprendieran de ti?",
+   "¿Qué consejo le darías a tu yo del pasado?",
+   "¿Qué hace que alguien sea inolvidable para ti?"
+  ]
+ ],
+ reto:[
+  [
+   "Di tres cosas por las que estás agradecido.",
+   "Haz una pose de estatua durante diez segundos.",
+   "Inventa un saludo para el grupo.",
+   "Di un trabalenguas.",
+   "Imita el sonido de tu animal favorito."
+  ],
+  [
+   "Cuenta un chiste sin reírte.",
+   "Inventa un baile de diez segundos.",
+   "Habla como presentador de televisión.",
+   "Dibuja un animal en el aire.",
+   "Haz una imitación de un personaje ficticio."
+  ],
+  [
+   "Canta el estribillo de una canción que conozcas.",
+   "Cuenta una anécdota graciosa.",
+   "Improvisa un anuncio de un objeto cercano.",
+   "Describe una película usando solo tres pistas.",
+   "Haz una presentación dramática de ti mismo."
+  ],
+  [
+   "Inventa una historia usando tres palabras elegidas por el grupo.",
+   "Crea un rap de cuatro versos sobre el día de hoy.",
+   "Haz una escena de película de diez segundos.",
+   "Resuelve un acertijo que el grupo invente.",
+   "Inventa un lema para todos los participantes."
+  ],
+  [
+   "Di algo positivo de cada participante.",
+   "Dedica unas palabras de agradecimiento al grupo.",
+   "Inventa una pregunta original para la próxima ronda.",
+   "Cuenta qué experiencia te gustaría compartir con tus amigos.",
+   "Crea un brindis simbólico por los buenos momentos."
+  ]
+ ]
+};
+
+const $=id=>document.getElementById(id);
+const escapeHTML=s=>String(s).replace(/[&<>"']/g,c=>({
+ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+}[c]));
+
+let game={
+ mode:"group",names:[],scores:[],remaining:[],
+ current:-1,level:0,used:{verdad:[],reto:[]},
+ round:1,turn:0,spinning:false
+};
+let playerCount=4;
+let editorType="verdad";
+
+/* NAVEGACIÓN */
+function openScreen(id){
+ document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+ $(id).classList.add("active");
+ if(id==="history") renderHistory();
+ if(id==="profile"){
+  $("profileName").value=data.profile.name;
+  $("profileBio").value=data.profile.bio;
+ }
+ if(id==="settings"){
+  $("soundSetting").checked=data.settings.sound;
+  $("motionSetting").checked=data.settings.motion;
+ }
+ if(id==="editor") renderEditor();
+}
+
+/* SELECCIÓN DE MODO */
+function selectMode(mode){
+ game.mode=mode;
+ if(mode==="match"){
+  renderInterestGrid();
+  renderMatchPlayers();
+  openScreen("match");
+  return;
+ }
+ $("setupTitle").textContent=mode==="couple"?"Modo Pareja":"Modo Grupal";
+ $("setupDesc").textContent=mode==="couple"
+  ?"Dos participantes. Preparen sus nombres e intensidad."
+  :"Participan de 2 a 12 personas. Todos aparecerán en la ruleta.";
+ $("countWrap").classList.toggle("hidden",mode==="couple");
+ playerCount=mode==="couple"?2:4;
+ $("countValue").textContent=playerCount;
+ renderNameFields();
+ renderLevels();
+ openScreen("setup");
+}
+
+function changeCount(d){
+ playerCount=Math.max(2,Math.min(12,playerCount+d));
+ $("countValue").textContent=playerCount;
+ renderNameFields();
+}
+
+function renderNameFields(){
+ const n=game.mode==="couple"?2:playerCount;
+ $("nameFields").innerHTML="";
+ for(let i=0;i<n;i++){
+  const label=document.createElement("label");
+  label.className="field";
+  label.textContent="Participante "+(i+1);
+  const input=document.createElement("input");
+  input.maxLength=24;
+  input.placeholder="Nombre del jugador "+(i+1);
+  input.value=game.names[i]||"";
+  input.dataset.index=i;
+  label.appendChild(input);
+  $("nameFields").appendChild(label);
+ }
+}
+
+function renderLevels(){
+ $("levelGrid").innerHTML="";
+ intensity.forEach((v,i)=>{
+  const b=document.createElement("button");
+  b.className="level"+(game.level===i?" selected":"");
+  b.innerHTML=`<span class="icon">${v.icon}</span><strong>${v.name}</strong><span>${v.desc}</span>`;
+  b.onclick=()=>{
+   game.level=i;
+   renderLevels();
+  };
+  $("levelGrid").appendChild(b);
+ });
+}
+
+/* INICIAR PARTIDA */
+function startGame(){
+ const inputs=[...$("nameFields").querySelectorAll("input")];
+ const names=inputs.map(x=>x.value.trim());
+ if(names.some(x=>!x)){
+  alert("Escriban el nombre de todos los participantes.")
