@@ -4,1797 +4,1426 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#09050f">
-<title>VYRA 3.0 | The Connection Experience</title>
+<meta name="theme-color" content="#10091d">
+<title>VYRA | Verdad • Reto • Conexión</title>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
 
-:root{
- --bg:#09050f;
- --panel:#190e23;
- --panel2:#241331;
- --purple:#a855f7;
- --violet:#6d28a8;
- --gold:#e8c477;
- --pink:#ed8bea;
- --white:#fff4ff;
- --muted:#c3afce;
- --border:#694184;
+:root {
+  --bg:#10091d;
+  --panel:#1b102c;
+  --panel2:#26163b;
+  --gold:#d9b66b;
+  --gold2:#f3d99b;
+  --purple:#8c55c9;
+  --text:#f8f0ff;
+  --muted:#b9a9c9;
+  --danger:#d76c7b;
 }
-*{box-sizing:border-box}
-body{
- margin:0;min-height:100vh;color:var(--white);
- font-family:Manrope,sans-serif;
- background:radial-gradient(ellipse at 50% 0%,#48205e 0%,#1a0c27 38%,#09050f 85%);
- background-attachment:fixed;
+
+* {box-sizing:border-box}
+
+body {
+  margin:0;
+  min-height:100vh;
+  color:var(--text);
+  background:
+    radial-gradient(circle at 50% -10%,#48245e 0%,transparent 45%),
+    linear-gradient(160deg,#10091d,#080610);
+  font-family:Manrope,sans-serif;
 }
-button,input,textarea,select{font:inherit}
-button{cursor:pointer;color:inherit}
-button:disabled{opacity:.4;cursor:not-allowed}
-.app{max-width:850px;margin:auto;padding:16px}
-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
-.logo{
- font:700 28px Cinzel;letter-spacing:5px;color:#d8a9ff;
- text-shadow:0 0 18px var(--purple);
+
+button,input,select,textarea {font:inherit}
+
+button {
+  border:1px solid #6d4a91;
+  color:var(--text);
+  background:linear-gradient(135deg,#38204f,#241333);
+  padding:13px 17px;
+  border-radius:13px;
+  cursor:pointer;
+  font-weight:800;
+  transition:.2s;
 }
-.logo small{display:block;font:9px Manrope;letter-spacing:2px;color:var(--gold)}
-.screen{display:none;animation:appear .3s}
-.screen.active{display:block}
-@keyframes appear{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
-.hero{text-align:center;padding:30px 10px}
-.crown{font-size:42px;color:var(--gold)}
-h1{font:700 clamp(45px,12vw,75px) Cinzel;color:#d8a9ff;letter-spacing:5px;text-shadow:0 0 25px var(--purple);margin:5px 0}
-h2{font:700 27px Cinzel;color:#e5c8ff}
-h3{font:700 17px Cinzel;color:var(--gold)}
-p{line-height:1.6}
-.sub,.note{color:var(--muted)}
-.note{font-size:12px}
-.panel{
- background:linear-gradient(145deg,#291638,#100918);
- border:1px solid var(--border);border-radius:19px;
- padding:19px;margin:13px 0;box-shadow:0 12px 30px #0008;
+
+button:active {transform:scale(.97)}
+button:hover {border-color:var(--gold)}
+
+button.primary {
+  color:#21152b;
+  background:linear-gradient(135deg,var(--gold2),var(--gold));
+  border:0;
 }
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:11px}
-.mode,.level,.choice{
- background:linear-gradient(145deg,#321849,#130a1d);
- border:1px solid #794a99;border-radius:16px;padding:16px 10px;
- text-align:center;min-height:105px;transition:.2s;
+
+button.danger {
+  background:#49202e;
+  border-color:#a64c61;
 }
-.mode:hover,.level:hover,.choice:hover{
- border-color:var(--gold);box-shadow:0 0 18px #a855f755;transform:translateY(-2px);
+
+button.secondary {background:#21152f}
+
+button:disabled {opacity:.45;cursor:not-allowed}
+
+input,select,textarea {
+  width:100%;
+  padding:13px;
+  border-radius:11px;
+  border:1px solid #59406e;
+  background:#100a1a;
+  color:white;
+  outline:none;
 }
-.mode .icon,.choice .icon{font-size:29px;display:block;margin-bottom:8px}
-.mode strong,.level strong{display:block;font-size:14px}
-.mode span,.level span{display:block;font-size:11px;color:var(--muted);margin-top:6px;line-height:1.4}
-.level.selected{border-color:var(--gold);background:#49245b;box-shadow:0 0 20px #e8c47755}
-.btn{
- border:1px solid #b76bea;background:linear-gradient(100deg,#702ca8,#35134d);
- padding:12px 20px;border-radius:50px;font-weight:800;box-shadow:0 0 16px #8b35cb44;
+
+input:focus,select:focus,textarea:focus {
+  border-color:var(--gold);
 }
-.btn.gold{background:linear-gradient(100deg,#93651f,#503311);border-color:var(--gold);color:#fff4d7}
-.btn.ghost{background:#160d22;border-color:var(--border);box-shadow:none}
-.btn.red{background:#51182b;border-color:#a83d61}
-.actions{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-top:18px}
-.field{display:block;margin:13px 0;font-size:13px;color:var(--muted)}
-.field input,.field textarea,.field select{
- width:100%;display:block;margin-top:7px;padding:12px;
- border-radius:11px;border:1px solid var(--border);background:#0c0712;color:white;
+
+textarea {min-height:85px;resize:vertical}
+
+header {
+  text-align:center;
+  padding:23px 12px 12px;
 }
-.field textarea{min-height:85px;resize:vertical}
-.names{display:grid;gap:5px}
-.hidden{display:none!important}
-.badge{display:inline-block;padding:5px 11px;border:1px solid var(--gold);border-radius:30px;color:var(--gold);font-size:11px}
-.wheel-area{text-align:center;margin:20px auto}
-.pointer{font-size:28px;color:var(--gold);margin-bottom:-8px;position:relative;z-index:2}
-.wheel{
- width:min(78vw,330px);height:min(78vw,330px);margin:auto;
- border:7px solid var(--gold);border-radius:50%;position:relative;
- box-shadow:0 0 0 5px #4a2460,0 0 30px #b76bea88;
+
+.logo {
+  font-family:Cinzel,serif;
+  font-size:39px;
+  letter-spacing:8px;
+  color:var(--gold2);
+  text-shadow:0 0 25px #a66bd1;
 }
-.wheel-name{
- position:absolute;left:50%;top:50%;width:100px;
- margin-left:-50px;margin-top:-10px;text-align:center;
- font-size:11px;font-weight:800;text-shadow:0 2px 5px black;
- overflow:hidden;white-space:nowrap;pointer-events:none;
+
+.tagline {
+  color:var(--muted);
+  font-size:10px;
+  letter-spacing:3px;
 }
-.wheel-center{
- position:absolute;left:50%;top:50%;width:42px;height:42px;
- transform:translate(-50%,-50%);border-radius:50%;
- background:radial-gradient(circle,#ffe6a5,#9d681f);
- border:3px solid #fff0c0;z-index:2;
+
+main {
+  width:min(700px,94%);
+  margin:auto;
+  padding:10px 0 40px;
 }
-.chosen{text-align:center;font:700 23px Cinzel;color:var(--gold);margin:18px 0}
-.card-question{
- min-height:140px;display:grid;place-items:center;text-align:center;padding:24px;
- border:1px solid var(--gold);border-radius:17px;
- background:radial-gradient(ellipse at top,#38204a,#0c0712);
- font:600 20px Cinzel;line-height:1.6;
+
+.screen {display:none;animation:appear .35s ease}
+.screen.active {display:block}
+
+@keyframes appear {
+  from {opacity:0;transform:translateY(8px)}
+  to {opacity:1;transform:translateY(0)}
 }
-.score-list{display:grid;gap:8px}
-.score-row{
- display:flex;justify-content:space-between;align-items:center;gap:10px;
- padding:11px 13px;background:#100918;border:1px solid var(--border);border-radius:11px;
+
+.panel {
+  background:linear-gradient(145deg,#251638,#160e24);
+  border:1px solid #49305e;
+  border-radius:19px;
+  padding:20px;
+  margin:14px 0;
+  box-shadow:0 12px 35px #0005;
 }
-.score-row b{color:var(--gold)}
-.tabs{display:flex;gap:7px;flex-wrap:wrap}
-.tab{border:1px solid var(--border);border-radius:30px;background:#100918;padding:8px 12px;font-size:12px}
-.tab.active{border-color:var(--gold);background:#51266d}
-.interests{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-.interest{background:#100918;border:1px solid var(--border);padding:12px;border-radius:11px;text-align:left}
-.interest.on{border-color:var(--gold);background:#382044}
-.option{
- display:block;padding:12px;margin:8px 0;border:1px solid var(--border);
- border-radius:11px;background:#100918;cursor:pointer;
+
+h1,h2,h3 {
+  font-family:Cinzel,serif;
+  color:var(--gold2);
+  text-align:center;
 }
-.option input{margin-right:8px;accent-color:#a855f7}
-.stat{background:#100918;padding:13px;border-radius:12px;text-align:center;border:1px solid var(--border)}
-.stat strong{display:block;color:var(--gold);font-size:22px}
-.footer{text-align:center;color:#927da1;font-size:11px;margin:28px 0}
-.small-btn{padding:7px 10px;border-radius:9px;border:1px solid var(--border);background:#261532;font-size:11px}
-hr{border:0;border-top:1px solid #694184;margin:17px 0}
-@media(min-width:600px){
- .app{padding:25px}.hero{padding:45px 15px}.panel{padding:25px}
+
+h1 {font-size:25px}
+h2 {font-size:21px}
+h3 {font-size:17px}
+
+p {line-height:1.6;color:#e5d9ef}
+
+.muted {color:var(--muted);font-size:13px}
+.small {font-size:11px;color:var(--muted)}
+.center {text-align:center}
+
+.stack {display:grid;gap:11px}
+.grid2 {display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+.menu-button {
+  min-height:75px;
+  font-family:Cinzel,serif;
+  font-size:16px;
+  letter-spacing:1px;
 }
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.field {margin:13px 0}
+.field label {
+  display:block;
+  margin-bottom:7px;
+  color:var(--gold2);
+  font-size:13px;
+  font-weight:800;
+}
+
+.player-row {
+  display:flex;
+  gap:8px;
+  align-items:center;
+  margin:8px 0;
+}
+
+.player-row input {flex:1}
+
+.pill {
+  display:inline-block;
+  background:#39244c;
+  color:var(--gold2);
+  border:1px solid #654780;
+  border-radius:30px;
+  padding:6px 11px;
+  font-size:11px;
+  margin:3px;
+}
+
+.wheel {
+  width:min(310px,80vw);
+  height:min(310px,80vw);
+  margin:20px auto;
+  border-radius:50%;
+  border:7px solid var(--gold);
+  background:conic-gradient(
+    #38204f 0deg 60deg,
+    #21132f 60deg 120deg,
+    #4a2864 120deg 180deg,
+    #241431 180deg 240deg,
+    #57306c 240deg 300deg,
+    #21132f 300deg 360deg
+  );
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 0 30px #9a65c655,inset 0 0 20px #0008;
+  position:relative;
+}
+
+.wheel:before {
+  content:"VYRA";
+  font-family:Cinzel,serif;
+  font-size:30px;
+  color:var(--gold2);
+  text-shadow:0 0 15px #000;
+}
+
+.wheel:after {
+  content:"▼";
+  position:absolute;
+  top:-18px;
+  color:var(--gold2);
+  font-size:26px;
+}
+
+.selected-name {
+  font-family:Cinzel,serif;
+  font-size:27px;
+  color:var(--gold2);
+  text-align:center;
+  min-height:45px;
+  margin:12px 0;
+}
+
+.card-question {
+  font-family:Cinzel,serif;
+  font-size:21px;
+  text-align:center;
+  line-height:1.6;
+  padding:20px 5px;
+  color:#fff0c9;
+}
+
+.score-row,.history-row,.custom-row {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding:11px 0;
+  border-bottom:1px solid #49345c;
+}
+
+.score-row:last-child,.history-row:last-child {border:0}
+
+.checkbox-list {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.checkbox-list label {
+  background:#281938;
+  padding:10px;
+  border-radius:10px;
+  font-size:12px;
+}
+
+.checkbox-list input {width:auto}
+
+footer {
+  text-align:center;
+  padding:25px 10px;
+  color:#89769b;
+  font-size:10px;
+  letter-spacing:2px;
+}
+
+@media(max-width:420px) {
+  .grid2 {grid-template-columns:1fr}
+  .logo {font-size:32px}
+}
 </style>
 </head>
 
 <body>
-<div class="app">
 
 <header>
- <div class="logo">VYRA<small>THE CONNECTION EXPERIENCE</small></div>
- <button class="btn ghost" onclick="openScreen('settings')">⚙️</button>
+  <div class="logo">VYRA</div>
+  <div class="tagline">VERDAD • RETO • CONEXIÓN</div>
 </header>
 
-<!-- =====================================
-     00. INICIO
-===================================== -->
-<section class="screen active" id="home">
- <div class="hero">
-  <div class="crown">♛</div>
-  <h1>VYRA</h1>
-  <p class="sub">VERDAD · RETO · CONEXIÓN</p>
-  <div style="color:var(--gold);font-family:Cinzel">Una creación de VEDANNYLOVE ♡</div>
- </div>
- <div class="panel" style="text-align:center">
-  <p class="sub">Una experiencia donde cada decisión crea una historia.</p>
-  <button class="btn gold" onclick="openScreen('menu')">ENTRAR A VYRA ➜</button>
- </div>
- <div class="actions">
-  <button class="btn ghost" onclick="openScreen('profile')">👤 Perfil</button>
-  <button class="btn ghost" onclick="openScreen('history')">🏆 Historial</button>
- </div>
+<main>
+
+<!-- =========================================
+     1. PANTALLA PRINCIPAL
+========================================= -->
+
+<section id="home" class="screen active">
+  <div class="panel center">
+    <h1>THE CONNECTION EXPERIENCE</h1>
+    <p>Una experiencia de preguntas, desafíos y conexiones.</p>
+    <div class="stack">
+      <button class="primary" onclick="showScreen('menu')">ENTRAR A VYRA</button>
+      <button onclick="showScreen('match')">ENCUENTRA TU MEDIA NARANJA</button>
+      <button onclick="showScreen('settings')">CONFIGURACIÓN</button>
+    </div>
+  </div>
 </section>
 
-<!-- =====================================
-     00.1 MENU PRINCIPAL
-===================================== -->
-<section class="screen" id="menu">
- <div class="hero">
-  <h2>Menú principal</h2>
-  <p class="sub">Elige tu experiencia</p>
- </div>
- <div class="grid">
-  <button class="mode" onclick="selectMode('couple')">
-   <span class="icon">💜</span><strong>Modo Pareja</strong>
-   <span>2 participantes</span>
-  </button>
-  <button class="mode" onclick="selectMode('group')">
-   <span class="icon">👥</span><strong>Modo Grupal</strong>
-   <span>De 2 a 12 participantes</span>
-  </button>
-  <button class="mode" onclick="selectMode('match')">
-   <span class="icon">💞</span><strong>Encuentra tu Media Naranja</strong>
-   <span>Conexiones por intereses</span>
-  </button>
- </div>
- <div class="actions">
-  <button class="btn ghost" onclick="openScreen('editor')">✎ Editor de tarjetas</button>
-  <button class="btn ghost" onclick="openScreen('history')">🏆 Historial</button>
- </div>
+<!-- =========================================
+     2. MENÚ PRINCIPAL
+========================================= -->
+
+<section id="menu" class="screen">
+  <div class="panel">
+    <h1>ELIGE TU EXPERIENCIA</h1>
+    <div class="stack">
+      <button class="menu-button" onclick="openSetup('couple')">♡ MODO PAREJA</button>
+      <button class="menu-button" onclick="openSetup('group')">✦ MODO GRUPAL</button>
+      <button class="menu-button" onclick="showScreen('match')">✧ MEDIA NARANJA</button>
+      <button onclick="showEditor()">EDITOR DE CONTENIDO</button>
+      <button onclick="renderHistory()">HISTORIAL</button>
+      <button onclick="showScreen('profile')">PERFIL</button>
+      <button onclick="showScreen('home')">VOLVER</button>
+    </div>
+  </div>
 </section>
 
-<!-- =====================================
-     00.2 CONFIGURACION DE PARTIDA
-===================================== -->
-<section class="screen" id="setup">
- <div class="panel">
-  <h2 id="setupTitle">Configurar partida</h2>
-  <p class="sub" id="setupDesc"></p>
-  <div id="countWrap" class="field hidden">
-   Número de jugadores
-   <div class="actions">
-    <button class="btn ghost" onclick="changeCount(-1)">−</button>
-    <strong id="countValue">4</strong>
-    <button class="btn ghost" onclick="changeCount(1)">+</button>
-   </div>
+<!-- =========================================
+     3. CONFIGURACIÓN DE PARTIDA
+========================================= -->
+
+<section id="setup" class="screen">
+  <div class="panel">
+    <h1 id="setupTitle">PREPARAR PARTIDA</h1>
+
+    <div class="field">
+      <label>Participantes</label>
+      <div id="nameFields"></div>
+      <button onclick="addNameField()">+ AÑADIR PARTICIPANTE</button>
+    </div>
+
+    <div class="field">
+      <label>Intensidad</label>
+      <select id="levelSelect"></select>
+    </div>
+
+    <p class="muted" id="setupInfo"></p>
+
+    <div class="stack">
+      <button class="primary" onclick="startGame()">INICIAR PARTIDA</button>
+      <button onclick="showScreen('menu')">VOLVER</button>
+    </div>
   </div>
-  <div id="nameFields" class="names"></div>
-  <h3>Intensidad del juego</h3>
-  <p class="note">Elige el ambiente de tu partida. Todos pueden pasar cualquier tarjeta.</p>
-  <div class="grid" id="levelGrid"></div>
-  <div class="actions">
-   <button class="btn ghost" onclick="openScreen('menu')">Volver</button>
-   <button class="btn gold" onclick="startGame()">Comenzar ➜</button>
-  </div>
- </div>
 </section>
 
-<!-- =====================================
-     00.3 RULETA
-===================================== -->
-<section class="screen" id="wheelScreen">
- <div class="panel">
-  <h2 style="text-align:center">Ruleta VYRA</h2>
-  <p class="sub" style="text-align:center">¿Quién será el siguiente?</p>
-  <div class="wheel-area">
-   <div class="pointer">▼</div>
-   <div class="wheel" id="wheel"><div class="wheel-center"></div></div>
-   <p class="sub" id="wheelStatus">La suerte está en tus manos.</p>
+<!-- =========================================
+     4. RULETA
+========================================= -->
+
+<section id="wheelScreen" class="screen">
+  <div class="panel center">
+    <h1>RULETA VYRA</h1>
+    <p class="muted">La suerte decidirá quién participa.</p>
+    <div class="wheel"></div>
+    <div id="wheelName" class="selected-name">¿QUIÉN SERÁ?</div>
+    <p id="roundInfo" class="muted"></p>
+    <div class="stack">
+      <button class="primary" id="spinButton" onclick="spinWheel()">GIRAR RULETA</button>
+      <button onclick="renderScore()">VER PUNTUACIONES</button>
+      <button class="danger" onclick="finishGame()">FINALIZAR PARTIDA</button>
+    </div>
   </div>
-  <div class="chosen hidden" id="chosenName"></div>
-  <div class="actions">
-   <button class="btn gold" id="spinBtn" onclick="spinWheel()">GIRAR RULETA</button>
-   <button class="btn ghost" onclick="finishGame()">Finalizar partida</button>
-  </div>
- </div>
 </section>
 
-<!-- =====================================
-     00.4 VERDAD O RETO
-===================================== -->
-<section class="screen" id="choice">
- <div class="panel">
-  <div class="chosen" id="turnName"></div>
-  <h2 style="text-align:center">¿Qué eliges?</h2>
-  <p class="sub" style="text-align:center">Elige una tarjeta para descubrirla.</p>
-  <div class="grid">
-   <button class="choice" onclick="drawCard('preguntas')">
-    <span class="icon">💬</span><strong>VERDAD</strong>
-    <span class="note">Responde sinceramente</span>
-   </button>
-   <button class="choice" onclick="drawCard('retos')">
-    <span class="icon">⚡</span><strong>RETO</strong>
-    <span class="note">Acepta el desafío</span>
-   </button>
+<!-- =========================================
+     5. ELECCIÓN VERDAD O RETO
+========================================= -->
+
+<section id="choice" class="screen">
+  <div class="panel center">
+    <h1>ES TU TURNO</h1>
+    <div id="currentPlayer" class="selected-name"></div>
+    <p>¿Qué eliges?</p>
+    <div class="grid2">
+      <button class="primary" onclick="drawCard('verdad')">VERDAD</button>
+      <button onclick="drawCard('reto')">RETO</button>
+    </div>
+    <p class="small">Puedes pasar cualquier pregunta o desafío sin dar explicaciones.</p>
+    <button class="secondary" onclick="skipTurn()">PASAR TURNO</button>
   </div>
-  <div class="actions">
-   <button class="btn ghost" onclick="skipTurn()">Pasar turno</button>
-  </div>
- </div>
 </section>
 
-<!-- =====================================
-     00.5 TARJETA
-===================================== -->
-<section class="screen" id="card">
- <div class="panel">
-  <div class="chosen" id="cardHeader"></div>
-  <div class="card-question" id="questionText"></div>
-  <p class="note" style="text-align:center">Respeta los límites de todos. Puedes pasar cualquier tarjeta.</p>
-  <div class="actions">
-   <button class="btn ghost" onclick="skipTurn()">Pasar</button>
-   <button class="btn gold" onclick="completeTurn()">¡Completado! +10 ⭐</button>
+<!-- =========================================
+     6. TARJETA
+========================================= -->
+
+<section id="card" class="screen">
+  <div class="panel">
+    <h2 id="cardType">VERDAD</h2>
+    <div class="center"><span id="cardLevel" class="pill"></span></div>
+    <div id="cardText" class="card-question"></div>
+    <p class="small center">Participa solamente si te sientes cómodo. Siempre puedes pasar.</p>
+    <div class="stack">
+      <button class="primary" onclick="completeTurn()">COMPLETAR TURNO</button>
+      <button onclick="skipTurn()">SALTAR ESTA TARJETA</button>
+    </div>
   </div>
- </div>
 </section>
 
-<!-- =====================================
-     00.6 PUNTUACION
-===================================== -->
-<section class="screen" id="score">
- <div class="panel">
-  <h2 style="text-align:center">Puntuación</h2>
-  <p class="sub" id="roundInfo" style="text-align:center"></p>
-  <div class="score-list" id="scoreList"></div>
-  <div class="actions">
-   <button class="btn ghost" onclick="finishGame()">Finalizar partida</button>
-   <button class="btn gold" onclick="nextTurn()">Siguiente turno ➜</button>
+<!-- =========================================
+     7. PUNTUACIONES
+========================================= -->
+
+<section id="score" class="screen">
+  <div class="panel">
+    <h1>PUNTUACIONES</h1>
+    <div id="scoreList"></div>
+    <div class="stack">
+      <button class="primary" onclick="nextTurn()">SIGUIENTE TURNO</button>
+      <button class="danger" onclick="finishGame()">FINALIZAR PARTIDA</button>
+      <button onclick="showScreen('menu')">MENÚ PRINCIPAL</button>
+    </div>
   </div>
- </div>
 </section>
 
-<!-- =====================================
-     00.7 RESULTADO FINAL
-===================================== -->
-<section class="screen" id="results">
- <div class="panel">
-  <h2 style="text-align:center">🏆 Resultado final</h2>
-  <p class="sub" style="text-align:center" id="resultDescription"></p>
-  <div class="score-list" id="finalRanking"></div>
-  <div class="actions">
-   <button class="btn gold" onclick="openScreen('menu')">Volver al menú</button>
+<!-- =========================================
+     8. MEDIA NARANJA
+========================================= -->
+
+<section id="match" class="screen">
+  <div class="panel">
+    <h1>ENCUENTRA TU MEDIA NARANJA</h1>
+    <p class="muted center">Conoce personas mediante intereses y respuestas. El resultado es recreativo, no determina la compatibilidad real.</p>
+
+    <div class="field">
+      <label>Nombre del participante</label>
+      <input id="matchName" placeholder="Escribe tu nombre">
+    </div>
+
+    <div class="field">
+      <label>Selecciona tus intereses</label>
+      <div class="checkbox-list" id="interestList"></div>
+    </div>
+
+    <div class="field">
+      <label>¿Qué plan prefieres?</label>
+      <select id="answer1">
+        <option value="">Selecciona una respuesta</option>
+        <option value="aventura">Una aventura al aire libre</option>
+        <option value="pelicula">Una película tranquila</option>
+        <option value="juego">Una tarde de videojuegos</option>
+        <option value="charla">Una buena conversación</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>¿Qué valoras más en una amistad?</label>
+      <select id="answer2">
+        <option value="">Selecciona una respuesta</option>
+        <option value="confianza">Confianza</option>
+        <option value="humor">Sentido del humor</option>
+        <option value="respeto">Respeto</option>
+        <option value="apoyo">Apoyo mutuo</option>
+      </select>
+    </div>
+
+    <div class="stack">
+      <button class="primary" onclick="addMatchPerson()">REGISTRAR PARTICIPANTE</button>
+      <button onclick="compareMatches()">COMPARAR CONEXIONES</button>
+      <button onclick="clearMatchPeople()">BORRAR PARTICIPANTES</button>
+      <button onclick="showScreen('menu')">VOLVER AL MENÚ</button>
+    </div>
   </div>
- </div>
+
+  <div class="panel">
+    <h2>PARTICIPANTES REGISTRADOS</h2>
+    <div id="matchPeople"></div>
+  </div>
+
+  <div class="panel">
+    <h2>RESULTADOS</h2>
+    <div id="matchResults" class="muted center">Todavía no hay resultados.</div>
+  </div>
 </section>
 
-<!-- =====================================
-     00.8 MEDIA NARANJA
-===================================== -->
-<section class="screen" id="match">
- <div class="panel">
-  <h2>Encuentra tu Media Naranja 💞</h2>
-  <p class="sub">Conócete, responde y descubre conexiones interesantes.</p>
-  <div id="matchForm">
-   <label class="field">Nombre del participante
-    <input id="matchName" maxlength="24" placeholder="Tu nombre">
-   </label>
-   <h3>Selecciona tus intereses</h3>
-   <div id="interestGrid" class="interests"></div>
-   <hr>
-   <h3>Preguntas de personalidad</h3>
-   <div id="matchQuestions"></div>
-   <div class="actions">
-    <button class="btn gold" onclick="addMatchPlayer()">Guardar participante</button>
-    <button class="btn ghost" onclick="openScreen('menu')">Volver</button>
-   </div>
+<!-- =========================================
+     9. EDITOR DE CONTENIDO
+========================================= -->
+
+<section id="editor" class="screen">
+  <div class="panel">
+    <h1>EDITOR VYRA</h1>
+    <p class="muted">Agrega tus propias preguntas y desafíos. Se guardarán en este dispositivo.</p>
+
+    <div class="field">
+      <label>Modo</label>
+      <select id="editorMode" onchange="updateEditorLevels()">
+        <option value="group">Grupal</option>
+        <option value="couple">Pareja</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Intensidad</label>
+      <select id="editorLevel"></select>
+    </div>
+
+    <div class="field">
+      <label>Tipo de contenido</label>
+      <select id="editorType">
+        <option value="verdad">Verdad</option>
+        <option value="reto">Reto</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Escribe tu pregunta o reto</label>
+      <textarea id="editorText" placeholder="Escribe aquí tu contenido..."></textarea>
+    </div>
+
+    <div class="stack">
+      <button class="primary" onclick="addCustomCard()">GUARDAR CONTENIDO</button>
+      <button onclick="renderCustomCards()">VER CONTENIDO PERSONALIZADO</button>
+      <button onclick="showScreen('menu')">VOLVER</button>
+    </div>
   </div>
-  <hr>
-  <h3>Participantes registrados</h3>
-  <div id="matchPlayers" class="score-list"></div>
-  <div class="actions">
-   <button class="btn gold" onclick="finishMatches()">Descubrir conexiones 💜</button>
-   <button class="btn red" onclick="clearMatches()">Reiniciar participantes</button>
+
+  <div class="panel">
+    <h2>CONTENIDO PERSONALIZADO</h2>
+    <div id="customList"></div>
   </div>
-  <div id="matchResult"></div>
- </div>
 </section>
 
-<!-- =====================================
-     00.9 EDITOR
-===================================== -->
-<section class="screen" id="editor">
- <div class="panel">
-  <h2>Editor de contenido</h2>
-  <p class="sub">Administra las tarjetas de cada modo e intensidad.</p>
+<!-- =========================================
+     10. HISTORIAL
+========================================= -->
 
-  <label class="field">Modo de juego
-   <select id="editorMode" onchange="renderEditor()">
-    <option value="group">Modo Grupal</option>
-    <option value="couple">Modo Pareja</option>
-   </select>
-  </label>
-
-  <label class="field">Intensidad
-   <select id="editorLevel" onchange="renderEditorList()"></select>
-  </label>
-
-  <div class="tabs">
-   <button class="tab active" id="tabQuestions" onclick="setEditorType('preguntas')">Verdades</button>
-   <button class="tab" id="tabChallenges" onclick="setEditorType('retos')">Retos</button>
+<section id="history" class="screen">
+  <div class="panel">
+    <h1>HISTORIAL</h1>
+    <div id="historyList"></div>
+    <div class="stack">
+      <button class="danger" onclick="clearHistory()">BORRAR HISTORIAL</button>
+      <button onclick="showScreen('menu')">VOLVER</button>
+    </div>
   </div>
-
-  <label class="field">Nueva tarjeta
-   <textarea id="newCard" maxlength="300" placeholder="Escribe aquí tu pregunta o reto..."></textarea>
-  </label>
-
-  <button class="btn gold" onclick="addCustomCard()">Guardar tarjeta</button>
-  <p class="note" id="editorCount"></p>
-  <div class="score-list" id="editorList" style="margin-top:15px"></div>
-  <div class="actions">
-   <button class="btn ghost" onclick="openScreen('menu')">Volver</button>
-  </div>
- </div>
 </section>
 
-<!-- =====================================
-     00.10 HISTORIAL
-===================================== -->
-<section class="screen" id="history">
- <div class="panel">
-  <h2>Historial de partidas</h2>
-  <div class="score-list" id="historyList"></div>
-  <div class="actions">
-   <button class="btn ghost" onclick="openScreen('menu')">Volver</button>
-   <button class="btn red" onclick="clearHistory()">Borrar historial</button>
+<!-- =========================================
+     11. PERFIL
+========================================= -->
+
+<section id="profile" class="screen">
+  <div class="panel center">
+    <h1>PERFIL VYRA</h1>
+    <div class="logo">V</div>
+    <p>THE CONNECTION EXPERIENCE</p>
+    <p class="muted">Una experiencia creada para compartir, descubrir y conectar.</p>
+    <button onclick="showScreen('menu')">VOLVER</button>
   </div>
- </div>
 </section>
 
-<!-- =====================================
-     00.11 PERFIL
-===================================== -->
-<section class="screen" id="profile">
- <div class="panel">
-  <h2>Mi perfil</h2>
-  <label class="field">Nombre
-   <input id="profileName" maxlength="30">
-  </label>
-  <label class="field">Descripción
-   <input id="profileBio" maxlength="80">
-  </label>
-  <button class="btn gold" onclick="saveProfile()">Guardar perfil</button>
-  <div class="actions">
-   <button class="btn ghost" onclick="openScreen('menu')">Volver</button>
+<!-- =========================================
+     12. CONFIGURACIÓN
+========================================= -->
+
+<section id="settings" class="screen">
+  <div class="panel">
+    <h1>CONFIGURACIÓN</h1>
+    <p class="muted">Los datos de VYRA se guardan localmente en tu dispositivo.</p>
+    <div class="stack">
+      <button class="danger" onclick="resetApp()">RESTABLECER DATOS DE VYRA</button>
+      <button onclick="showScreen('home')">VOLVER</button>
+    </div>
   </div>
- </div>
 </section>
 
-<!-- =====================================
-     00.12 AJUSTES
-===================================== -->
-<section class="screen" id="settings">
- <div class="panel">
-  <h2>Ajustes</h2>
-  <label class="field">
-   <input type="checkbox" id="motionSetting" checked>
-   Activar animaciones
-  </label>
-  <p class="note">Tus datos se almacenan en este navegador. Si borras sus datos, podrías perder tus partidas y tarjetas.</p>
-  <div class="actions">
-   <button class="btn ghost" onclick="openScreen('menu')">Volver</button>
-   <button class="btn red" onclick="resetData()">Restablecer todo</button>
+<!-- =========================================
+     13. RESULTADO FINAL
+========================================= -->
+
+<section id="final" class="screen">
+  <div class="panel">
+    <h1>PARTIDA FINALIZADA</h1>
+    <div id="finalResults"></div>
+    <button class="primary" onclick="showScreen('menu')">VOLVER AL MENÚ</button>
   </div>
- </div>
 </section>
 
-<footer class="footer">
- VYRA · THE CONNECTION EXPERIENCE<br>
- Una creación de VEDANNYLOVE ♡
-</footer>
-</div>
+</main>
+
+<footer>© 2026 VYRA PROJECT · CREATED BY VEDANNYLOVE</footer>
 
 <script>
-"use strict";
 
-/* =====================================
-   01. ALMACENAMIENTO
-===================================== */
+/* =========================================
+   14. CONFIGURACIÓN GENERAL Y GUARDADO
+========================================= */
 
-const STORAGE_KEY="vyra_3_complete";
+const STORAGE_KEY = "vyra_complete_v3";
 
-function defaultData(){
- return {
-  custom:{group:{},couple:{}},
-  history:[],
-  profile:{name:"",bio:""},
-  matchPlayers:[],
-  settings:{motion:true}
- };
+const GROUP_LEVELS = [
+  "SUAVE",
+  "DIVERTIDO",
+  "ATREVIDO",
+  "EXTREMO",
+  "ESPECIAL"
+];
+
+const COUPLE_LEVELS = [
+  "SUAVE",
+  "DIVERTIDO",
+  "ATREVIDO",
+  "EXTREMO",
+  "ESPECIAL",
+  "INTIMO"
+];
+
+const interests = [
+  "Videojuegos","Música","Deportes","Tecnología",
+  "Películas","Viajes","Arte","Lectura",
+  "Naturaleza","Fotografía","Cocina","Aventuras"
+];
+
+let savedData = loadData();
+
+function loadData() {
+  try {
+    const data = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    if (data && typeof data === "object") {
+      return {
+        custom: Array.isArray(data.custom) ? data.custom : [],
+        history: Array.isArray(data.history) ? data.history : [],
+        matchPeople: Array.isArray(data.matchPeople) ? data.matchPeople : []
+      };
+    }
+  } catch(e) {}
+  return {custom:[],history:[],matchPeople:[]};
 }
 
-function loadData(){
- try{
-  const saved=JSON.parse(localStorage.getItem(STORAGE_KEY));
-  if(saved && typeof saved==="object"){
-   const base=defaultData();
-   return {
-    ...base,
-    ...saved,
-    custom:{
-     ...base.custom,
-     ...(saved.custom||{})
-    },
-    profile:{...base.profile,...(saved.profile||{})},
-    settings:{...base.settings,...(saved.settings||{})},
-    history:Array.isArray(saved.history)?saved.history:[],
-    matchPlayers:Array.isArray(saved.matchPlayers)?saved.matchPlayers:[]
-   };
+function saveData() {
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(savedData));
+}
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, char => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  }[char]));
+}
+
+function showScreen(id) {
+  document.querySelectorAll(".screen").forEach(screen => {
+    screen.classList.remove("active");
+  });
+  document.getElementById(id).classList.add("active");
+  window.scrollTo(0,0);
+}
+
+/* =========================================
+   15. CONTENIDO — MODO GRUPAL
+   Puedes agregar o modificar preguntas aquí.
+========================================= */
+
+const CONTENT = {
+
+group: {
+  verdad: {
+    SUAVE: [
+      "¿Cuál es tu comida favorita?",
+      "¿Qué canción nunca te cansas de escuchar?",
+      "¿Qué lugar te gustaría visitar?",
+      "¿Cuál es tu película favorita?"
+    ],
+    DIVERTIDO: [
+      "¿Cuál fue tu momento más gracioso en el colegio?",
+      "¿Qué personaje de película te representa?",
+      "¿Qué talento extraño tienes?",
+      "¿Qué harías si fueras invisible por un día?"
+    ],
+    ATREVIDO: [
+      "¿Qué cosa te da vergüenza admitir?",
+      "¿Cuál fue tu primera impresión de alguien del grupo?",
+      "¿Qué secreto divertido puedes compartir?",
+      "¿Alguna vez fingiste saber algo que no sabías?"
+    ],
+    EXTREMO: [
+      "¿Qué opinión tuya suele sorprender a los demás?",
+      "¿Qué experiencia te gustaría vivir alguna vez?",
+      "¿Qué reto personal te gustaría superar?",
+      "¿Qué decisión te enseñó una lección importante?"
+    ],
+    ESPECIAL: [
+      "¿Qué sueño te gustaría cumplir antes de los 25?",
+      "¿Qué valor nunca negociarías?",
+      "¿Qué persona te inspira y por qué?",
+      "¿Qué te gustaría que los demás comprendieran de ti?"
+    ]
+  },
+
+  reto: {
+    SUAVE: [
+      "Di tres cosas que te hacen feliz.",
+      "Imita a un personaje de dibujos animados.",
+      "Di el abecedario al revés hasta donde puedas.",
+      "Cuenta un chiste."
+    ],
+    DIVERTIDO: [
+      "Inventa un saludo para todo el grupo.",
+      "Habla como presentador de televisión durante un turno.",
+      "Crea una historia usando tres palabras que el grupo elija.",
+      "Haz una imitación de un animal."
+    ],
+    ATREVIDO: [
+      "Haz una declaración dramática a un objeto cercano.",
+      "Canta una canción elegida por el grupo.",
+      "Inventa un rap de diez segundos.",
+      "Cuenta una anécdota graciosa."
+    ],
+    EXTREMO: [
+      "Improvisa un discurso de motivación de treinta segundos.",
+      "Inventa un baile divertido durante unos segundos.",
+      "Haz una escena de película improvisada.",
+      "Describe a un participante usando solo tres palabras positivas."
+    ],
+    ESPECIAL: [
+      "Dile algo positivo a cada participante.",
+      "Cuenta una historia que nunca hayas compartido en el grupo.",
+      "Inventa un lema para la amistad del grupo.",
+      "Propón una actividad divertida para todos."
+    ]
   }
- }catch(e){
-  console.warn("No se pudieron recuperar los datos.",e);
- }
- return defaultData();
+},
+
+/* =========================================
+   16. CONTENIDO — MODO PAREJA
+   Incluye seis intensidades independientes.
+========================================= */
+
+couple: {
+  verdad: {
+    SUAVE: [
+      "¿Cuál fue tu primera impresión de mí?",
+      "¿Qué actividad disfrutas más cuando estamos juntos?",
+      "¿Qué canción te recuerda a nosotros?",
+      "¿Cuál es tu recuerdo favorito de un día especial?"
+    ],
+    DIVERTIDO: [
+      "¿Quién de los dos es más distraído?",
+      "¿Qué apodo gracioso me pondrías?",
+      "¿Qué aventura divertida deberíamos vivir?",
+      "¿Qué situación nuestra te hace reír?"
+    ],
+    ATREVIDO: [
+      "¿Qué cosa te cuesta decirme por vergüenza?",
+      "¿Qué detalle mío te parece especial?",
+      "¿Qué momento te hizo sentir más cerca de mí?",
+      "¿Qué te gustaría que hiciéramos más a menudo?"
+    ],
+    EXTREMO: [
+      "¿Qué conversación importante deberíamos tener?",
+      "¿Qué miedo te gustaría superar conmigo?",
+      "¿Qué hábito podríamos mejorar juntos?",
+      "¿Qué significa para ti construir una relación sana?"
+    ],
+    ESPECIAL: [
+      "¿Qué sueño te gustaría que cumpliéramos juntos?",
+      "¿Qué has aprendido de nuestra relación?",
+      "¿Qué recuerdo guardarías para siempre?",
+      "¿Cómo podemos apoyarnos mejor en nuestros objetivos?"
+    ],
+    INTIMO: [
+      "¿Qué gesto de cariño te hace sentir más querido?",
+      "¿Qué momento romántico recuerdas con más cariño?",
+      "¿Qué necesitas para sentir confianza y tranquilidad?",
+      "¿Qué significa para ti la intimidad emocional?",
+      "¿Qué detalle afectuoso te gustaría recibir más seguido?"
+    ]
+  },
+
+  reto: {
+    SUAVE: [
+      "Dile tres cosas que admiras de tu pareja.",
+      "Dedícale una canción.",
+      "Cuéntale un recuerdo bonito.",
+      "Hazle una pregunta que nunca le hayas hecho."
+    ],
+    DIVERTIDO: [
+      "Imiten juntos una escena de película.",
+      "Inventen un saludo secreto.",
+      "Dibujen algo juntos en treinta segundos.",
+      "Intenten adivinar la comida favorita del otro."
+    ],
+    ATREVIDO: [
+      "Dile un cumplido que nunca le hayas dicho.",
+      "Improvisa una pequeña declaración romántica.",
+      "Describe su personalidad usando cinco palabras.",
+      "Cuéntale qué detalle suyo te sorprendió."
+    ],
+    EXTREMO: [
+      "Planeen una aventura que les gustaría vivir juntos.",
+      "Escriban una promesa de apoyo mutuo.",
+      "Digan algo que podrían mejorar como equipo.",
+      "Inventen una cita creativa con presupuesto limitado."
+    ],
+    ESPECIAL: [
+      "Escriban una carta breve para leer en el futuro.",
+      "Compartan un sueño personal y cómo apoyarlo.",
+      "Recuerden un momento en el que se ayudaron.",
+      "Digan qué significa para ustedes una relación respetuosa."
+    ],
+    INTIMO: [
+      "Si ambos quieren, dense un abrazo afectuoso.",
+      "Tómense de las manos si los dos están cómodos.",
+      "Digan qué gesto de cariño les hace sentir seguros.",
+      "Compartan un recuerdo romántico que valoren.",
+      "Dediquen un minuto a decirse algo sincero y bonito."
+    ]
+  }
 }
-
-let data=loadData();
-
-function saveData(){
- try{
-  localStorage.setItem(STORAGE_KEY,JSON.stringify(data));
- }catch(e){
-  alert("No se pudieron guardar los datos. Revisa el almacenamiento del navegador.");
- }
-}
-
-/* =====================================
-   02. INTENSIDADES
-===================================== */
-
-const INTENSITIES={
- group:[
-  {id:"SUAVE",icon:"🌙",desc:"Preguntas tranquilas y amistosas"},
-  {id:"DIVERTIDO",icon:"🎉",desc:"Risas, humor y ocurrencias"},
-  {id:"ATREVIDO",icon:"🔥",desc:"Confesiones y sorpresas sociales"},
-  {id:"EXTREMO",icon:"⚡",desc:"Desafíos creativos y originales"},
-  {id:"ESPECIAL",icon:"👑",desc:"Amistad y conexión profunda"}
- ],
- couple:[
-  {id:"SUAVE",icon:"🌙",desc:"Cariño y ternura"},
-  {id:"DIVERTIDO",icon:"🎉",desc:"Diversión en pareja"},
-  {id:"ATREVIDO",icon:"🔥",desc:"Confesiones y complicidad"},
-  {id:"EXTREMO",icon:"⚡",desc:"Desafíos románticos creativos"},
-  {id:"ESPECIAL",icon:"👑",desc:"Sentimientos y futuro"},
-  {id:"INTIMO",icon:"🌹",desc:"Confianza y conexión emocional"}
- ]
-};
-
-/* =====================================
-   03. CONTENIDO BASE
-   Cada modo tiene sus propias tarjetas.
-   Cada intensidad tiene preguntas y retos.
-===================================== */
-
-/* =====================================
-   03.1 MODO GRUPAL
-===================================== */
-
-const GRUPAL={
-
- SUAVE:{
-  preguntas:[
-   "¿Qué te gusta hacer en tu tiempo libre?",
-   "¿Cuál es tu recuerdo favorito de la infancia?",
-   "¿Qué comida nunca te cansas de comer?",
-   "¿Qué lugar te gustaría visitar?",
-   "¿Qué canción siempre mejora tu día?",
-   "¿Qué animal te gustaría tener?",
-   "¿Qué talento te gustaría aprender?",
-   "¿Qué película podrías ver muchas veces?",
-   "¿Qué es lo que más disfrutas de una amistad?",
-   "¿Qué pequeño detalle te hace feliz?"
-  ],
-  retos:[
-   "Di tres cosas por las que estás agradecido.",
-   "Haz tu mejor pose de fotografía.",
-   "Inventa un saludo para el grupo.",
-   "Di un trabalenguas.",
-   "Imita el sonido de tu animal favorito.",
-   "Describe tu día usando solamente tres palabras.",
-   "Haz una presentación divertida de ti mismo.",
-   "Di algo positivo de la persona que tienes a tu derecha.",
-   "Inventa un nombre para el grupo.",
-   "Haz una estatua durante diez segundos."
-  ]
- },
-
- DIVERTIDO:{
-  preguntas:[
-   "¿Cuál ha sido tu momento más vergonzoso y gracioso?",
-   "¿Qué personaje ficticio se parece más a ti?",
-   "¿Qué harías si fueras invisible durante un día?",
-   "¿Cuál es la excusa más extraña que has inventado?",
-   "¿Qué comida jamás probarías?",
-   "¿Qué harías si ganaras un millón de dólares?",
-   "¿Qué canción cantarías en un karaoke?",
-   "¿Cuál es tu manía más curiosa?",
-   "¿Qué apodo divertido te pondrías?",
-   "¿Qué harías si despertaras siendo famoso?"
-  ],
-  retos:[
-   "Cuenta un chiste sin reírte.",
-   "Inventa un baile de diez segundos.",
-   "Habla como presentador de televisión.",
-   "Imita a un personaje y deja que adivinen.",
-   "Improvisa un anuncio de un objeto cercano.",
-   "Inventa una historia absurda con tres palabras.",
-   "Haz una narración deportiva de algo que ocurra en la habitación.",
-   "Canta una canción como si estuvieras en una ópera.",
-   "Haz una cara graciosa durante diez segundos.",
-   "Interpreta una escena de película sin hablar."
-  ]
- },
-
- ATREVIDO:{
-  preguntas:[
-   "¿Qué opinión tuya suele sorprender a los demás?",
-   "¿Alguna vez fingiste entender algo para no preguntar?",
-   "¿Qué es algo que te cuesta admitir?",
-   "¿Cuál fue tu mayor equivocación divertida?",
-   "¿Qué aventura te gustaría vivir con tus amigos?",
-   "¿Qué hábito curioso tienes?",
-   "¿Qué primera impresión equivocada han tenido de ti?",
-   "¿Qué cosa te da vergüenza hacer delante de todos?",
-   "¿Qué decisión espontánea recuerdas con cariño?",
-   "¿Qué pregunta nunca te habían hecho?"
-  ],
-  retos:[
-   "Deja que el grupo elija un tema y haz una improvisación.",
-   "Cuenta una anécdota divertida usando voces diferentes.",
-   "Inventa una canción sobre el grupo.",
-   "Haz una entrevista imaginaria a otro participante.",
-   "Describe a un participante usando solamente tres pistas positivas.",
-   "Inventa un comercial para vender una media.",
-   "Haz una imitación de tu personaje favorito.",
-   "Improvisa un discurso de agradecimiento.",
-   "Crea un apodo divertido y respetuoso para ti mismo.",
-   "Representa una emoción sin pronunciar palabras."
-  ]
- },
-
- EXTREMO:{
-  preguntas:[
-   "¿Qué harías si pudieras cambiar de vida con alguien por un día?",
-   "¿Cuál sería tu aventura más inesperada?",
-   "¿Qué talento secreto te gustaría tener?",
-   "¿Qué harías si fueras el protagonista de una película?",
-   "¿Cuál es la idea más loca que te gustaría realizar algún día?",
-   "¿Qué tres cosas llevarías a una isla imaginaria?",
-   "¿Qué invento absurdo crearías?",
-   "¿Qué personaje del grupo sobreviviría mejor en una aventura ficticia?",
-   "¿Qué experiencia nueva te gustaría probar con tus amigos?",
-   "¿Qué harías si pudieras viajar al futuro?"
-  ],
-  retos:[
-   "Improvisa una escena de película con dos participantes.",
-   "Crea un rap de cuatro versos sobre el día de hoy.",
-   "Inventa un concurso de talentos de treinta segundos.",
-   "Haz una narración dramática de una acción cotidiana.",
-   "Crea una coreografía con otro participante.",
-   "Representa una película para que el grupo la adivine.",
-   "Inventa una historia donde todos tengan un personaje.",
-   "Haz un discurso como si acabaras de ganar un premio.",
-   "Inventa un idioma y enseña tres palabras al grupo.",
-   "Crea un eslogan oficial para VYRA."
-  ]
- },
-
- ESPECIAL:{
-  preguntas:[
-   "¿Qué valoras más de las personas que te rodean?",
-   "¿Qué significa para ti una amistad verdadera?",
-   "¿Qué recuerdo con tus amigos quisieras conservar?",
-   "¿Qué sueño te gustaría cumplir acompañado?",
-   "¿Qué cualidad admiras de cada persona del grupo?",
-   "¿Qué consejo importante has recibido?",
-   "¿Qué te gustaría mejorar de ti mismo?",
-   "¿Qué experiencia te ha enseñado algo importante?",
-   "¿Qué hace que una persona sea inolvidable?",
-   "¿Qué te gustaría que tus amigos recordaran de ti?"
-  ],
-  retos:[
-   "Di algo positivo de cada participante.",
-   "Dedica unas palabras de agradecimiento al grupo.",
-   "Inventa una pregunta original para la próxima ronda.",
-   "Cuenta qué experiencia te gustaría compartir con tus amigos.",
-   "Haz una promesa amistosa que todos puedan cumplir.",
-   "Describe al grupo usando cinco palabras.",
-   "Dedica una frase motivadora a otro participante.",
-   "Inventa un recuerdo que te gustaría crear con el grupo.",
-   "Propón una actividad que todos puedan disfrutar.",
-   "Crea un brindis simbólico por la amistad."
-  ]
- }
 
 };
 
-/* =====================================
-   03.2 MODO PAREJA
-===================================== */
+/* =========================================
+   17. ESTADO DE LA PARTIDA
+========================================= */
 
-const PAREJA={
-
- SUAVE:{
-  preguntas:[
-   "¿Qué es lo que más te gusta de tu pareja?",
-   "¿Qué es lo que más amas de tu pareja?",
-   "¿Qué fue lo primero que llamó tu atención?",
-   "¿Cuál es tu recuerdo favorito juntos?",
-   "¿Qué detalle de tu pareja te hace sonreír?",
-   "¿Qué canción te recuerda a tu pareja?",
-   "¿Qué es lo que más disfrutas hacer juntos?",
-   "¿Qué gesto cariñoso te gusta recibir?",
-   "¿Qué momento de su relación guardarías para siempre?",
-   "¿Qué palabra describe mejor a tu pareja?"
-  ],
-  retos:[
-   "Acaricia cariñosamente la mano de tu pareja, si quiere.",
-   "Dale un beso romántico, si ambos quieren.",
-   "Dile tres cosas que te gustan de ella.",
-   "Dale un abrazo de veinte segundos.",
-   "Dedícale una frase bonita.",
-   "Mírense a los ojos durante diez segundos.",
-   "Tómense una fotografía haciendo una pose divertida.",
-   "Dile un apodo cariñoso.",
-   "Recrea cómo fue su primer encuentro.",
-   "Agradece a tu pareja por un momento especial."
-  ]
- },
-
- DIVERTIDO:{
-  preguntas:[
-   "¿Qué es lo más gracioso que hace tu pareja?",
-   "¿Quién de los dos se ríe más?",
-   "¿Qué personaje ficticio representa a tu pareja?",
-   "¿Qué comida describe mejor a tu relación?",
-   "¿Quién tardaría más en prepararse para una cita?",
-   "¿Qué apodo gracioso le pondrías a tu pareja?",
-   "¿Qué aventura divertida deberían vivir juntos?",
-   "¿Quién es más probable que se pierda usando un mapa?",
-   "¿Qué canción cantarían juntos en un karaoke?",
-   "¿Qué situación absurda les haría reír sin parar?"
-  ],
-  retos:[
-   "Imita cariñosamente a tu pareja.",
-   "Inventen un baile de pareja.",
-   "Canten juntos el estribillo de una canción.",
-   "Haz una declaración romántica exageradamente dramática.",
-   "Inventen un saludo secreto.",
-   "Dibuja a tu pareja en treinta segundos.",
-   "Recreen una escena de película romántica.",
-   "Inventen un apodo divertido para su relación.",
-   "Hagan una competencia de miradas graciosas.",
-   "Descríbanse mutuamente usando tres emojis."
-  ]
- },
-
- ATREVIDO:{
-  preguntas:[
-   "¿Qué es algo que nunca te atreviste a pedirme por timidez?",
-   "¿Qué detalle romántico te gustaría recibir?",
-   "¿Qué momento conmigo te puso más nervioso?",
-   "¿Qué es algo que te gustaría que hiciéramos más seguido?",
-   "¿Qué gesto mío te parece especialmente encantador?",
-   "¿Qué sorpresa te gustaría recibir de mí?",
-   "¿Qué te gustaría confesarme y todavía no has encontrado el momento?",
-   "¿Qué tipo de cita te gustaría experimentar?",
-   "¿Qué es algo nuevo que te gustaría aprender conmigo?",
-   "¿Qué te hace sentir más querido?"
-  ],
-  retos:[
-   "Susúrrale una frase romántica a tu pareja.",
-   "Dedícale una canción.",
-   "Describe tu cita ideal con tu pareja.",
-   "Dile algo bonito que nunca le hayas dicho.",
-   "Escribe una pequeña nota romántica.",
-   "Invéntale una declaración espontánea.",
-   "Dale un abrazo sorpresa, preguntando primero.",
-   "Elige una canción que represente lo que sientes.",
-   "Cuéntale un recuerdo que te haga sentir especial.",
-   "Planea una cita imaginaria con un presupuesto ilimitado."
-  ]
- },
-
- EXTREMO:{
-  preguntas:[
-   "Si pudieras vivir una aventura conmigo, ¿cuál elegirías?",
-   "¿Qué sueño te gustaría cumplir a mi lado?",
-   "¿Qué cosa espontánea te gustaría que hiciéramos juntos?",
-   "¿Qué experiencia nueva te gustaría compartir conmigo?",
-   "¿Qué momento romántico te gustaría recrear?",
-   "¿Qué lugar sería perfecto para una cita inolvidable?",
-   "¿Qué sorpresa inesperada te haría feliz?",
-   "¿Qué reto creativo podríamos superar juntos?",
-   "¿Qué historia divertida te gustaría protagonizar conmigo?",
-   "¿Qué recuerdo nuevo deberíamos crear este año?"
-  ],
-  retos:[
-   "Improvisa una declaración romántica de treinta segundos.",
-   "Inventa una cita sorpresa sin gastar dinero.",
-   "Crea una historia en la que ambos sean protagonistas.",
-   "Baila una canción elegida por tu pareja.",
-   "Describe cómo sería una aventura juntos.",
-   "Prepara una sorpresa usando solamente palabras.",
-   "Inventen una promesa divertida para esta semana.",
-   "Recreen su primera cita de una forma teatral.",
-   "Escriban juntos una pequeña historia de amor.",
-   "Inventen un saludo especial para cuando se vuelvan a ver."
-  ]
- },
-
- ESPECIAL:{
-  preguntas:[
-   "¿Qué significa para ti nuestra relación?",
-   "¿Qué te gustaría construir conmigo en el futuro?",
-   "¿Qué es lo que más valoras de nuestra confianza?",
-   "¿Qué te gustaría que nunca cambiara entre nosotros?",
-   "¿Qué has aprendido desde que estamos juntos?",
-   "¿Qué significa para ti amar a alguien?",
-   "¿Qué podemos mejorar para entendernos mejor?",
-   "¿Qué recuerdo nuestro te gustaría contar algún día?",
-   "¿Qué sueño te gustaría cumplir conmigo?",
-   "¿Cómo podemos apoyarnos mutuamente en nuestros objetivos?"
-  ],
-  retos:[
-   "Dile a tu pareja cinco cosas que admiras de ella.",
-   "Escriban un sueño que quieran cumplir juntos.",
-   "Inventen una tradición especial para su relación.",
-   "Dediquen un minuto a agradecerse mutuamente.",
-   "Descríbanse con una palabra y expliquen por qué.",
-   "Escriban una carta breve para leer en el futuro.",
-   "Inventen un plan para una cita especial.",
-   "Digan una cosa que pueden mejorar juntos.",
-   "Creen una frase que represente su relación.",
-   "Hagan una lista de cinco experiencias que quieran compartir."
-  ]
- },
-
- /* ÍNTIMO: ROMANTICISMO, CONFIANZA Y COMPLICIDAD */
-
- INTIMO:{
-  preguntas:[
-   "¿Qué momento quisieras repetir con tu pareja y por qué?",
-   "¿Qué es lo que más te gusta que haga tu pareja para que te sientas especial?",
-   "¿Qué es algo que nunca te atreviste a pedirle a tu pareja por timidez?",
-   "Si pudieran estar solos en un lugar tranquilo, ¿qué plan romántico elegirías?",
-   "¿Qué detalle de tu pareja te hace sentir más querido?",
-   "¿Qué tipo de cariño disfrutas más?",
-   "¿Qué recuerdo romántico te gustaría volver a vivir?",
-   "¿Qué te gustaría que tu pareja comprendiera mejor de ti?",
-   "¿Qué te hace sentir más conectado emocionalmente?",
-   "¿Qué conversación te gustaría tener con tu pareja?",
-   "¿Qué significa para ti tener confianza absoluta?",
-   "¿Qué detalle pequeño puede cambiarte el día?",
-   "¿Qué experiencia romántica todavía te gustaría vivir?",
-   "¿Qué te gustaría descubrir juntos?",
-   "¿Qué es lo que más te gusta de compartir momentos a solas?"
-  ],
-  retos:[
-   "Dale un abrazo cariñoso de treinta segundos, si ambos quieren.",
-   "Dale un beso romántico en el lugar que ambos acuerden.",
-   "Susúrrale tres cosas que admiras de tu pareja.",
-   "Dedícale una mirada romántica durante veinte segundos.",
-   "Cuéntale una fantasía romántica sobre una cita imaginaria.",
-   "Dale un masaje en los hombros si le resulta agradable.",
-   "Dile algo bonito que normalmente te da vergüenza expresar.",
-   "Deja que tu pareja elija una canción para bailar juntos.",
-   "Escribe una nota romántica y léela en voz alta.",
-   "Inventen una sorpresa romántica que puedan realizar juntos.",
-   "Dile qué momento de su relación te hizo sentir más feliz.",
-   "Elijan juntos un recuerdo que quieran crear próximamente."
-  ]
- }
-
+let game = {
+  mode:"group",
+  level:"SUAVE",
+  names:[],
+  scores:[],
+  remaining:[],
+  current:-1,
+  currentCard:null,
+  round:1,
+  spinning:false,
+  used:{}
 };
 
-/* =====================================
-   04. VARIABLES PRINCIPALES
-===================================== */
+let setupMode = "group";
 
-const $=id=>document.getElementById(id);
+/* =========================================
+   18. CONFIGURAR PARTICIPANTES
+========================================= */
 
-const escapeHTML=value=>String(value).replace(/[&<>"']/g,c=>({
- "&":"&amp;",
- "<":"&lt;",
- ">":"&gt;",
- '"':"&quot;",
- "'":"&#39;"
-}[c]));
-
-let game={
- mode:"group",
- names:[],
- scores:[],
- remaining:[],
- current:-1,
- level:"SUAVE",
- used:{},
- round:1,
- turn:0,
- spinning:false,
- cardOpen:false,
- finished:false
-};
-
-let playerCount=4;
-let editorType="preguntas";
-let spinTimer=null;
-
-/* =====================================
-   05. NAVEGACION
-===================================== */
-
-function openScreen(id){
- document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
- const target=$(id);
- if(!target){
-  console.error("Pantalla inexistente:",id);
-  return;
- }
- target.classList.add("active");
-
- if(id==="history")renderHistory();
-
- if(id==="profile"){
-  $("profileName").value=data.profile.name;
-  $("profileBio").value=data.profile.bio;
- }
-
- if(id==="settings"){
-  $("motionSetting").checked=data.settings.motion;
- }
-
- if(id==="editor")renderEditor();
-
- if(id==="match"){
-  renderInterestGrid();
-  renderMatchQuestions();
-  renderMatchPlayers();
- }
+function getLevels(mode) {
+  return mode === "couple" ? COUPLE_LEVELS : GROUP_LEVELS;
 }
 
-/* =====================================
-   06. SELECCION DE MODO
-===================================== */
+function openSetup(mode) {
+  setupMode = mode;
+  document.getElementById("setupTitle").textContent =
+    mode === "couple" ? "MODO PAREJA" : "MODO GRUPAL";
 
-function selectMode(mode){
- if(mode==="match"){
-  openScreen("match");
-  return;
- }
+  document.getElementById("setupInfo").textContent =
+    mode === "couple"
+    ? "Participan exactamente dos personas."
+    : "Puedes jugar con un mínimo de dos y un máximo de doce personas.";
 
- game.mode=mode;
- game.level="SUAVE";
+  const select = document.getElementById("levelSelect");
+  select.innerHTML = getLevels(mode).map(level =>
+    `<option value="${level}">${level}</option>`
+  ).join("");
 
- $("setupTitle").textContent=mode==="couple"?"Modo Pareja":"Modo Grupal";
+  const fields = document.getElementById("nameFields");
+  fields.innerHTML = "";
 
- $("setupDesc").textContent=mode==="couple"
-  ?"Dos participantes compartirán una experiencia especial."
-  :"Participan de 2 a 12 personas. Todos aparecerán en la ruleta.";
+  addNameField();
+  addNameField();
 
- $("countWrap").classList.toggle("hidden",mode==="couple");
-
- playerCount=mode==="couple"?2:4;
- $("countValue").textContent=playerCount;
-
- renderNameFields();
- renderLevels();
- openScreen("setup");
+  showScreen("setup");
 }
 
-function changeCount(delta){
- playerCount=Math.max(2,Math.min(12,playerCount+delta));
- $("countValue").textContent=playerCount;
- renderNameFields();
+function addNameField() {
+  const fields = document.getElementById("nameFields");
+  const current = fields.querySelectorAll("input").length;
+  const maximum = setupMode === "couple" ? 2 : 12;
+
+  if (current >= maximum) {
+    alert("Has alcanzado el máximo de participantes.");
+    return;
+  }
+
+  const div = document.createElement("div");
+  div.className = "player-row";
+
+  const input = document.createElement("input");
+  input.placeholder = "Nombre del participante " + (current + 1);
+  input.maxLength = 30;
+
+  div.appendChild(input);
+  fields.appendChild(div);
 }
 
-function renderNameFields(){
- const count=game.mode==="couple"?2:playerCount;
- const container=$("nameFields");
- container.innerHTML="";
+function startGame() {
+  const names = [...document.querySelectorAll("#nameFields input")]
+    .map(input => input.value.trim());
 
- for(let i=0;i<count;i++){
-  const label=document.createElement("label");
-  label.className="field";
-  label.textContent="Participante "+(i+1);
+  if (names.some(name => !name)) {
+    alert("Escriban el nombre de todos los participantes.");
+    return;
+  }
 
-  const input=document.createElement("input");
-  input.maxLength=24;
-  input.placeholder="Nombre del jugador "+(i+1);
-  input.value=game.names[i]||"";
+  if (new Set(names.map(n => n.toLowerCase())).size !== names.length) {
+    alert("Utilicen nombres diferentes para cada participante.");
+    return;
+  }
 
-  label.appendChild(input);
-  container.appendChild(label);
- }
-}
+  if (setupMode === "couple" && names.length !== 2) {
+    alert("El modo pareja necesita exactamente dos participantes.");
+    return;
+  }
 
-function renderLevels(){
- const container=$("levelGrid");
- container.innerHTML="";
+  if (setupMode === "group" && (names.length < 2 || names.length > 12)) {
+    alert("El modo grupal admite de 2 a 12 participantes.");
+    return;
+  }
 
- INTENSITIES[game.mode].forEach(item=>{
-  const button=document.createElement("button");
-  button.className="level"+(game.level===item.id?" selected":"");
-
-  button.innerHTML=
-   `<span class="icon">${item.icon}</span>
-    <strong>${item.id}</strong>
-    <span>${item.desc}</span>`;
-
-  button.onclick=()=>{
-   game.level=item.id;
-   renderLevels();
+  game = {
+    mode:setupMode,
+    level:document.getElementById("levelSelect").value,
+    names,
+    scores:names.map(() => 0),
+    remaining:names.map((_,i) => i),
+    current:-1,
+    currentCard:null,
+    round:1,
+    spinning:false,
+    used:{}
   };
 
-  container.appendChild(button);
- });
+  document.getElementById("wheelName").textContent = "¿QUIÉN SERÁ?";
+  renderWheelInfo();
+  showScreen("wheelScreen");
 }
 
-/* =====================================
-   07. INICIAR PARTIDA
-===================================== */
+/* =========================================
+   19. RULETA ALEATORIA SIN REPETICIONES
+========================================= */
 
-function startGame(){
- const inputs=[...$("nameFields").querySelectorAll("input")];
- const names=inputs.map(input=>input.value.trim());
-
- if(names.some(name=>!name)){
-  alert("Escriban el nombre de todos los participantes.");
-  return;
- }
-
- if(new Set(names.map(n=>n.toLowerCase())).size!==names.length){
-  alert("Cada participante debe tener un nombre diferente.");
-  return;
- }
-
- game.names=names;
- game.scores=names.map(()=>0);
- game.remaining=names.map((_,i)=>i);
- game.current=-1;
- game.used={};
- game.round=1;
- game.turn=0;
- game.spinning=false;
- game.cardOpen=false;
- game.finished=false;
-
- renderWheel();
- openScreen("wheelScreen");
+function renderWheelInfo() {
+  document.getElementById("roundInfo").textContent =
+    "RONDA " + game.round +
+    " · FALTAN " + game.remaining.length + " PARTICIPANTES";
 }
 
-/* =====================================
-   08. RULETA
-===================================== */
+function spinWheel() {
+  if (game.spinning) return;
 
-function renderWheel(){
- const wheel=$("wheel");
- wheel.querySelectorAll(".wheel-name").forEach(el=>el.remove());
+  if (game.remaining.length === 0) {
+    game.remaining = game.names.map((_,i) => i);
+    game.round++;
+  }
 
- const n=game.names.length;
- if(!n)return;
+  game.spinning = true;
 
- const colors=["#47216b","#241331","#61318a","#301541","#52256f","#28153b"];
+  const button = document.getElementById("spinButton");
+  button.disabled = true;
 
- const gradient=game.names.map((name,i)=>{
-  const start=i*360/n;
-  const end=(i+1)*360/n;
-  return `${colors[i%colors.length]} ${start}deg ${end}deg`;
- }).join(",");
+  const display = document.getElementById("wheelName");
 
- wheel.style.background=`conic-gradient(${gradient})`;
- wheel.style.transition="none";
- wheel.style.transform="rotate(0deg)";
+  let counter = 0;
+  const duration = 22;
 
- game.names.forEach((name,i)=>{
-  const label=document.createElement("div");
-  label.className="wheel-name";
+  const animation = setInterval(() => {
+    const randomName = game.names[
+      Math.floor(Math.random() * game.names.length)
+    ];
 
-  const angle=(360/n)*i+(180/n);
+    display.textContent = randomName;
+    counter++;
 
-  label.style.transform=
-   `rotate(${angle}deg) translateY(-${Math.min(112,125)}px) rotate(${-angle}deg)`;
+    if (counter >= duration) {
+      clearInterval(animation);
 
-  label.textContent=name;
-  wheel.appendChild(label);
- });
+      const randomPosition = Math.floor(
+        Math.random() * game.remaining.length
+      );
 
- $("chosenName").classList.add("hidden");
- $("spinBtn").disabled=false;
- $("wheelStatus").textContent="Pulsa para girar la ruleta.";
- game.spinning=false;
+      game.current = game.remaining.splice(randomPosition,1)[0];
+
+      display.textContent = game.names[game.current];
+      game.spinning = false;
+      button.disabled = false;
+
+      renderWheelInfo();
+
+      document.getElementById("currentPlayer").textContent =
+        game.names[game.current];
+
+      showScreen("choice");
+    }
+  },90);
 }
 
-function spinWheel(){
- if(game.spinning||game.finished)return;
+/* =========================================
+   20. SELECCIÓN ALEATORIA DE PREGUNTAS
+   NO REPITE HASTA AGOTAR LA COLECCIÓN.
+========================================= */
 
- if(!game.remaining.length){
-  game.remaining=game.names.map((_,i)=>i);
-  game.round++;
- }
+function getCardCollection(type) {
+  const defaults = CONTENT[game.mode][type][game.level] || [];
 
- const eligible=[...game.remaining];
- const chosen=eligible[Math.floor(Math.random()*eligible.length)];
+  const custom = savedData.custom
+    .filter(item =>
+      item.mode === game.mode &&
+      item.type === type &&
+      item.level === game.level
+    )
+    .map(item => item.text);
 
- game.remaining=game.remaining.filter(i=>i!==chosen);
- game.current=chosen;
- game.spinning=true;
-
- $("spinBtn").disabled=true;
- $("wheelStatus").textContent="¡La ruleta está girando!";
-
- const n=game.names.length;
- const segment=360/n;
- const desired=360-(chosen*segment+segment/2);
- const angle=360*6+desired;
-
- const wheel=$("wheel");
- wheel.style.transition="transform 3.5s cubic-bezier(.12,.75,.12,1)";
- wheel.style.transform=`rotate(${angle}deg)`;
-
- clearTimeout(spinTimer);
-
- spinTimer=setTimeout(()=>{
-  game.spinning=false;
-
-  if(game.finished)return;
-
-  $("chosenName").textContent="♛ "+game.names[chosen]+" ♛";
-  $("chosenName").classList.remove("hidden");
-  $("wheelStatus").textContent="¡Jugador seleccionado!";
-
-  setTimeout(()=>{
-   if(game.finished)return;
-   $("turnName").textContent="Turno de "+game.names[chosen];
-   openScreen("choice");
-  },800);
-
- },3600);
+  return [...defaults,...custom];
 }
 
-/* =====================================
-   09. SISTEMA DE TARJETAS
-===================================== */
+function getRandomCard(type) {
+  const cards = getCardCollection(type);
 
-function getContent(){
- return game.mode==="couple"?PAREJA:GRUPAL;
+  if (!cards.length) {
+    alert("Todavía no hay contenido para esta categoría.");
+    return null;
+  }
+
+  const key = game.mode + "|" + type + "|" + game.level;
+
+  if (!Array.isArray(game.used[key])) {
+    game.used[key] = [];
+  }
+
+  let available = cards
+    .map((card,index) => index)
+    .filter(index => !game.used[key].includes(index));
+
+  // Si todas fueron utilizadas, se reinicia la colección.
+  if (available.length === 0) {
+    game.used[key] = [];
+    available = cards.map((card,index) => index);
+  }
+
+  // Selección aleatoria entre las que todavía no salieron.
+  const randomPosition = Math.floor(Math.random() * available.length);
+  const selectedIndex = available[randomPosition];
+
+  game.used[key].push(selectedIndex);
+
+  return cards[selectedIndex];
 }
 
-function getCards(type){
- const base=getContent()[game.level];
- if(!base)return [];
+function drawCard(type) {
+  const card = getRandomCard(type);
+  if (!card) return;
 
- const custom=data.custom[game.mode]?.[game.level]?.[type]||[];
- return [...base[type],...custom];
+  game.currentCard = card;
+
+  document.getElementById("cardType").textContent =
+    type === "verdad" ? "VERDAD" : "RETO";
+
+  document.getElementById("cardLevel").textContent = game.level;
+  document.getElementById("cardText").textContent = card;
+
+  showScreen("card");
 }
 
-function getUsedKey(type){
- return game.mode+"_"+game.level+"_"+type;
+/* =========================================
+   21. TURNOS Y PUNTUACIONES
+========================================= */
+
+function completeTurn() {
+  if (game.current >= 0) {
+    game.scores[game.current]++;
+  }
+  renderScore();
 }
 
-function drawCard(type){
- if(game.current<0||game.finished)return;
-
- const cards=getCards(type);
-
- if(!cards.length){
-  alert("No hay tarjetas disponibles en esta categoría.");
-  return;
- }
-
- const key=getUsedKey(type);
-
- if(!Array.isArray(game.used[key]))game.used[key]=[];
-
- if(game.used[key].length>=cards.length){
-  game.used[key]=[];
- }
-
- const available=cards
-  .map((_,i)=>i)
-  .filter(i=>!game.used[key].includes(i));
-
- if(!available.length){
-  alert("No hay tarjetas disponibles.");
-  return;
- }
-
- const index=available[Math.floor(Math.random()*available.length)];
- game.used[key].push(index);
- game.cardOpen=true;
-
- $("cardHeader").textContent=
-  (type==="preguntas"?"💬 VERDAD":"⚡ RETO")
-  +" · "+game.names[game.current]
-  +" · "+game.level;
-
- $("questionText").textContent=cards[index];
-
- openScreen("card");
+function skipTurn() {
+  renderScore();
 }
 
-/* =====================================
-   10. TURNOS Y PUNTUACION
-===================================== */
+function renderScore() {
+  const list = document.getElementById("scoreList");
 
-function completeTurn(){
- if(!game.cardOpen||game.current<0)return;
+  const sorted = game.names.map((name,index) => ({
+    name,
+    score:game.scores[index]
+  })).sort((a,b) => b.score - a.score);
 
- game.scores[game.current]+=10;
- game.turn++;
- game.cardOpen=false;
+  list.innerHTML = sorted.map((player,index) => `
+    <div class="score-row">
+      <span>${index + 1}. ${escapeHTML(player.name)}</span>
+      <strong>${player.score} puntos</strong>
+    </div>
+  `).join("");
 
- renderScores();
- openScreen("score");
+  showScreen("score");
 }
 
-function skipTurn(){
- if(game.finished)return;
+function nextTurn() {
+  if (game.remaining.length === 0) {
+    game.remaining = game.names.map((_,i) => i);
+    game.round++;
+  }
 
- game.turn++;
- game.cardOpen=false;
-
- renderScores();
- openScreen("score");
+  renderWheelInfo();
+  document.getElementById("wheelName").textContent = "¿QUIÉN SERÁ?";
+  showScreen("wheelScreen");
 }
 
-function renderScores(){
- $("roundInfo").textContent=
-  "Ronda "+game.round+" · Turno "+game.turn;
+function finishGame() {
+  if (!game.names.length) {
+    showScreen("menu");
+    return;
+  }
 
- const list=$("scoreList");
- list.innerHTML="";
+  const ranking = game.names.map((name,index) => ({
+    name,
+    score:game.scores[index]
+  })).sort((a,b) => b.score - a.score);
 
- game.names.forEach((name,i)=>{
-  const row=document.createElement("div");
-  row.className="score-row";
-
-  const label=document.createElement("span");
-  label.textContent=(i===game.current?"👑 ":"")+name;
-
-  const points=document.createElement("b");
-  points.textContent=game.scores[i]+" ⭐";
-
-  row.append(label,points);
-  list.appendChild(row);
- });
-}
-
-/* =====================================
-   11. RONDAS INFINITAS
-===================================== */
-
-function nextTurn(){
- if(game.finished)return;
-
- if(game.remaining.length===0){
-  game.remaining=game.names.map((_,i)=>i);
-  game.round++;
- }
-
- renderWheel();
- openScreen("wheelScreen");
-}
-
-/* =====================================
-   12. FINALIZAR PARTIDA
-===================================== */
-
-function finishGame(){
- if(game.finished||!game.names.length)return;
-
- if(!confirm("¿Quieres finalizar esta partida y guardar sus resultados?"))return;
-
- game.finished=true;
- game.spinning=false;
- game.cardOpen=false;
- clearTimeout(spinTimer);
-
- const ranking=game.names.map((name,i)=>({
-  name,
-  score:game.scores[i]
- })).sort((a,b)=>b.score-a.score);
-
- data.history.unshift({
-  date:new Date().toLocaleString("es-BO"),
-  mode:game.mode,
-  level:game.level,
-  rounds:game.round,
-  turns:game.turn,
-  ranking
- });
-
- data.history=data.history.slice(0,50);
- saveData();
-
- $("resultDescription").textContent=
-  (game.mode==="couple"?"Modo Pareja":"Modo Grupal")
-  +" · "+game.level
-  +" · "+game.round+" rondas";
-
- const list=$("finalRanking");
- list.innerHTML="";
-
- ranking.forEach((player,i)=>{
-  const row=document.createElement("div");
-  row.className="score-row";
-
-  const name=document.createElement("span");
-  name.textContent=(i===0?"🏆 ":`${i+1}. `)+player.name;
-
-  const points=document.createElement("b");
-  points.textContent=player.score+" ⭐";
-
-  row.append(name,points);
-  list.appendChild(row);
- });
-
- openScreen("results");
-}
-
-/* =====================================
-   13. MEDIA NARANJA
-===================================== */
-
-/* 13.1 INTERESES */
-
-const interestOptions=[
- "🎮 Videojuegos",
- "🎵 Música",
- "🎬 Películas",
- "⚽ Deportes",
- "💻 Tecnología",
- "✈️ Viajes",
- "🎨 Arte",
- "🐾 Animales",
- "📚 Lectura",
- "🍳 Cocina",
- "🌌 Astronomía",
- "🎤 Cantar",
- "📷 Fotografía",
- "🌳 Naturaleza",
- "🏕️ Aventuras",
- "🎭 Teatro"
-];
-
-const matchQuestions=[
- {
-  question:"¿Qué plan prefieres para un día libre?",
-  options:["Salir a pasear","Quedarme en casa","Hacer una aventura","Compartir con amigos"]
- },
- {
-  question:"¿Cómo describes tu personalidad?",
-  options:["Divertida","Tranquila","Aventurera","Creativa"]
- },
- {
-  question:"¿Qué valoras más en una persona?",
-  options:["Sinceridad","Sentido del humor","Confianza","Amabilidad"]
- },
- {
-  question:"¿Qué tipo de cita te gustaría?",
-  options:["Una caminata","Una cena tranquila","Una aventura","Una tarde de películas"]
- },
- {
-  question:"¿Cómo prefieres comunicarte?",
-  options:["Conversaciones profundas","Bromas y risas","Mensajes constantes","Un poco de todo"]
- },
- {
-  question:"¿Qué te gustaría compartir con alguien?",
-  options:["Viajes","Pasatiempos","Proyectos","Experiencias nuevas"]
- },
- {
-  question:"¿Qué te hace sentir más feliz?",
-  options:["La tranquilidad","Las sorpresas","La compañía","Aprender cosas nuevas"]
- },
- {
-  question:"¿Qué buscas en una conexión?",
-  options:["Amistad","Confianza","Diversión","Comprensión"]
- }
-];
-
-let selectedInterests=new Set();
-
-/* 13.2 MOSTRAR INTERESES */
-
-function renderInterestGrid(){
- selectedInterests.clear();
-
- const grid=$("interestGrid");
- if(!grid)return;
-
- grid.innerHTML="";
-
- interestOptions.forEach(value=>{
-  const button=document.createElement("button");
-  button.className="interest";
-  button.textContent=value;
-
-  button.onclick=()=>{
-   if(selectedInterests.has(value)){
-    selectedInterests.delete(value);
-    button.classList.remove("on");
-   }else{
-    selectedInterests.add(value);
-    button.classList.add("on");
-   }
-  };
-
-  grid.appendChild(button);
- });
-}
-
-/* 13.3 PREGUNTAS DE PERSONALIDAD */
-
-function renderMatchQuestions(){
- const container=$("matchQuestions");
- container.innerHTML="";
-
- matchQuestions.forEach((item,i)=>{
-  const section=document.createElement("div");
-  section.className="field";
-
-  const title=document.createElement("strong");
-  title.textContent=(i+1)+". "+item.question;
-  section.appendChild(title);
-
-  item.options.forEach(option=>{
-   const label=document.createElement("label");
-   label.className="option";
-
-   const radio=document.createElement("input");
-   radio.type="radio";
-   radio.name="matchQ"+i;
-   radio.value=option;
-
-   label.append(radio,document.createTextNode(option));
-   section.appendChild(label);
+  savedData.history.unshift({
+    date:new Date().toLocaleString(),
+    mode:game.mode === "couple" ? "Pareja" : "Grupal",
+    level:game.level,
+    ranking
   });
 
-  container.appendChild(section);
- });
+  savedData.history = savedData.history.slice(0,50);
+  saveData();
+
+  document.getElementById("finalResults").innerHTML =
+    ranking.map((player,index) => `
+      <div class="score-row">
+        <span>${index + 1}. ${escapeHTML(player.name)}</span>
+        <strong>${player.score} puntos</strong>
+      </div>
+    `).join("");
+
+  game.names = [];
+  showScreen("final");
 }
 
-/* 13.4 REGISTRAR PARTICIPANTE */
+/* =========================================
+   22. EDITOR DE CONTENIDO
+========================================= */
 
-function addMatchPlayer(){
- const name=$("matchName").value.trim();
+function showEditor() {
+  updateEditorLevels();
+  renderCustomCards();
+  showScreen("editor");
+}
 
- if(!name){
-  alert("Escribe el nombre del participante.");
-  return;
- }
+function updateEditorLevels() {
+  const mode = document.getElementById("editorMode").value;
+  const select = document.getElementById("editorLevel");
 
- if(selectedInterests.size<2){
-  alert("Selecciona al menos dos intereses.");
-  return;
- }
+  select.innerHTML = getLevels(mode).map(level =>
+    `<option value="${level}">${level}</option>`
+  ).join("");
+}
 
- if(data.matchPlayers.some(p=>p.name.toLowerCase()===name.toLowerCase())){
-  alert("Ese participante ya está registrado.");
-  return;
- }
+function addCustomCard() {
+  const mode = document.getElementById("editorMode").value;
+  const level = document.getElementById("editorLevel").value;
+  const type = document.getElementById("editorType").value;
+  const text = document.getElementById("editorText").value.trim();
 
- const answers=[];
-
- for(let i=0;i<matchQuestions.length;i++){
-  const selected=document.querySelector(`input[name="matchQ${i}"]:checked`);
-
-  if(!selected){
-   alert("Responde todas las preguntas de personalidad.");
-   return;
+  if (!text) {
+    alert("Escribe una pregunta o reto primero.");
+    return;
   }
 
-  answers.push(selected.value);
- }
+  savedData.custom.push({
+    id:Date.now() + Math.random(),
+    mode,
+    level,
+    type,
+    text
+  });
 
- data.matchPlayers.push({
-  name,
-  interests:[...selectedInterests],
-  answers
- });
+  saveData();
 
- saveData();
+  document.getElementById("editorText").value = "";
+  renderCustomCards();
 
- $("matchName").value="";
- renderInterestGrid();
- renderMatchQuestions();
- renderMatchPlayers();
- $("matchResult").innerHTML="";
- alert("¡Participante registrado correctamente!");
+  alert("¡Contenido guardado correctamente!");
 }
 
-/* 13.5 LISTA DE PARTICIPANTES */
+function renderCustomCards() {
+  const container = document.getElementById("customList");
 
-function renderMatchPlayers(){
- const list=$("matchPlayers");
- if(!list)return;
-
- list.innerHTML="";
-
- if(!data.matchPlayers.length){
-  list.innerHTML='<p class="note">Todavía no hay participantes registrados.</p>';
-  return;
- }
-
- data.matchPlayers.forEach((player,i)=>{
-  const row=document.createElement("div");
-  row.className="score-row";
-
-  const name=document.createElement("span");
-  name.textContent=player.name+" · "+player.interests.length+" intereses";
-
-  const del=document.createElement("button");
-  del.className="small-btn";
-  del.textContent="Eliminar";
-
-  del.onclick=()=>{
-   data.matchPlayers.splice(i,1);
-   saveData();
-   renderMatchPlayers();
-   $("matchResult").innerHTML="";
-  };
-
-  row.append(name,del);
-  list.appendChild(row);
- });
-}
-
-/* 13.6 COMPARAR COMPATIBILIDAD */
-
-function finishMatches(){
- const players=data.matchPlayers;
-
- if(players.length<2){
-  alert("Necesitas al menos dos participantes.");
-  return;
- }
-
- const pairs=[];
-
- for(let i=0;i<players.length;i++){
-  for(let j=i+1;j<players.length;j++){
-
-   const a=players[i];
-   const b=players[j];
-
-   const commonInterests=a.interests.filter(x=>b.interests.includes(x));
-
-   const commonAnswers=a.answers.filter((answer,index)=>{
-    return answer===b.answers[index];
-   });
-
-   const interestScore=
-    commonInterests.length/Math.max(1,Math.max(a.interests.length,b.interests.length));
-
-   const answerScore=
-    commonAnswers.length/matchQuestions.length;
-
-   const percentage=Math.round(
-    (interestScore*.45+answerScore*.55)*100
-   );
-
-   pairs.push({
-    a:a.name,
-    b:b.name,
-    percentage,
-    interests:commonInterests,
-    answers:commonAnswers
-   });
-  }
- }
-
- pairs.sort((a,b)=>b.percentage-a.percentage);
-
- const result=$("matchResult");
- result.innerHTML="<h3>💜 Resultados de compatibilidad</h3>";
-
- pairs.forEach(pair=>{
-  let conclusion="Tienen algunas diferencias interesantes que pueden descubrir juntos.";
-
-  if(pair.percentage>=80){
-   conclusion="Comparten muchos gustos y respuestas. Podrían disfrutar de una conexión muy interesante porque coinciden en varias preferencias.";
-  }else if(pair.percentage>=60){
-   conclusion="Tienen bastantes puntos en común. Sus gustos y personalidades muestran afinidades interesantes.";
-  }else if(pair.percentage>=40){
-   conclusion="Comparten algunos intereses y también tienen diferencias que pueden ayudarles a conocerse mejor.";
+  if (!savedData.custom.length) {
+    container.textContent = "Todavía no agregaste contenido personalizado.";
+    return;
   }
 
-  const card=document.createElement("div");
-  card.className="panel";
-
-  const title=document.createElement("h3");
-  title.textContent=pair.a+" 💜 "+pair.b;
-
-  const percentage=document.createElement("div");
-  percentage.className="stat";
-  percentage.innerHTML=`<strong>${pair.percentage}%</strong><span class="note">Coincidencia orientativa</span>`;
-
-  const detail=document.createElement("p");
-  detail.textContent=conclusion;
-
-  const interests=document.createElement("p");
-  interests.className="note";
-  interests.textContent="Intereses compartidos: "+
-   (pair.interests.length?pair.interests.join(", "):"Todavía ninguno");
-
-  const answers=document.createElement("p");
-  answers.className="note";
-  answers.textContent="Respuestas iguales: "+pair.answers.length+
-   " de "+matchQuestions.length;
-
-  card.append(title,percentage,detail,interests,answers);
-  result.appendChild(card);
- });
-
- const disclaimer=document.createElement("p");
- disclaimer.className="note";
- disclaimer.textContent="Los resultados son orientativos y recreativos. La compatibilidad no determina el futuro de una relación.";
- result.appendChild(disclaimer);
+  container.innerHTML = savedData.custom.map(item => `
+    <div class="custom-row">
+      <div>
+        <strong>${escapeHTML(item.text)}</strong>
+        <div class="small">
+          ${item.mode === "couple" ? "Pareja" : "Grupal"}
+          · ${escapeHTML(item.level)}
+          · ${item.type === "verdad" ? "Verdad" : "Reto"}
+        </div>
+      </div>
+      <button class="danger" onclick="deleteCustomCard('${item.id}')">X</button>
+    </div>
+  `).join("");
 }
 
-function clearMatches(){
- if(!confirm("¿Eliminar todos los participantes registrados?"))return;
+function deleteCustomCard(id) {
+  savedData.custom = savedData.custom.filter(
+    item => String(item.id) !== String(id)
+  );
 
- data.matchPlayers=[];
- saveData();
- renderMatchPlayers();
- $("matchResult").innerHTML="";
+  saveData();
+  renderCustomCards();
 }
 
-/* =====================================
-   14. EDITOR DE CONTENIDO
-===================================== */
+/* =========================================
+   23. MEDIA NARANJA — INTERESES Y RESPUESTAS
+========================================= */
 
-function getEditorContent(){
- return $("editorMode").value==="couple"?PAREJA:GRUPAL;
+function initInterests() {
+  const container = document.getElementById("interestList");
+
+  container.innerHTML = interests.map((interest,index) => `
+    <label>
+      <input type="checkbox" value="${escapeHTML(interest)}">
+      ${escapeHTML(interest)}
+    </label>
+  `).join("");
 }
 
-function setEditorType(type){
- editorType=type;
+function addMatchPerson() {
+  const name = document.getElementById("matchName").value.trim();
+  const answer1 = document.getElementById("answer1").value;
+  const answer2 = document.getElementById("answer2").value;
 
- $("tabQuestions").classList.toggle("active",type==="preguntas");
- $("tabChallenges").classList.toggle("active",type==="retos");
+  const selected = [
+    ...document.querySelectorAll("#interestList input:checked")
+  ].map(input => input.value);
 
- renderEditorList();
+  if (!name || !answer1 || !answer2 || selected.length === 0) {
+    alert("Completa tu nombre, intereses y respuestas.");
+    return;
+  }
+
+  if (savedData.matchPeople.some(
+    person => person.name.toLowerCase() === name.toLowerCase()
+  )) {
+    alert("Ese nombre ya está registrado.");
+    return;
+  }
+
+  savedData.matchPeople.push({
+    name,
+    interests:selected,
+    answer1,
+    answer2
+  });
+
+  saveData();
+
+  document.getElementById("matchName").value = "";
+  document.getElementById("answer1").value = "";
+  document.getElementById("answer2").value = "";
+
+  document.querySelectorAll("#interestList input").forEach(input => {
+    input.checked = false;
+  });
+
+  renderMatchPeople();
+
+  alert("Participante registrado.");
 }
 
-function renderEditor(){
- const mode=$("editorMode").value;
- const select=$("editorLevel");
- const old=select.value;
+function renderMatchPeople() {
+  const container = document.getElementById("matchPeople");
 
- select.innerHTML="";
+  if (!savedData.matchPeople.length) {
+    container.textContent = "No hay participantes registrados.";
+    return;
+  }
 
- INTENSITIES[mode].forEach(item=>{
-  const option=document.createElement("option");
-  option.value=item.id;
-  option.textContent=item.id;
-  select.appendChild(option);
- });
-
- if(INTENSITIES[mode].some(x=>x.id===old)){
-  select.value=old;
- }else{
-  select.value="SUAVE";
- }
-
- renderEditorList();
+  container.innerHTML = savedData.matchPeople.map(person => `
+    <div class="score-row">
+      <div>
+        <strong>${escapeHTML(person.name)}</strong>
+        <div class="small">${person.interests.map(escapeHTML).join(" · ")}</div>
+      </div>
+    </div>
+  `).join("");
 }
 
-function renderEditorList(){
- const mode=$("editorMode").value;
- const level=$("editorLevel").value;
- const content=getEditorContent();
- const base=content[level]?.[editorType]||[];
- const custom=data.custom[mode]?.[level]?.[editorType]||[];
+function compareMatches() {
+  const people = savedData.matchPeople;
+  const results = document.getElementById("matchResults");
 
- $("editorCount").textContent=
-  "Tarjetas originales: "+base.length+
-  " · Tarjetas personalizadas: "+custom.length;
+  if (people.length < 2) {
+    results.textContent = "Necesitas al menos dos participantes.";
+    return;
+  }
 
- const list=$("editorList");
- list.innerHTML="";
+  const pairs = [];
 
- if(!custom.length){
-  list.innerHTML='<p class="note">No hay tarjetas personalizadas en esta categoría.</p>';
-  return;
- }
+  for (let i=0; i<people.length; i++) {
+    for (let j=i+1; j<people.length; j++) {
+      const a = people[i];
+      const b = people[j];
 
- custom.forEach((card,i)=>{
-  const row=document.createElement("div");
-  row.className="score-row";
+      const common = a.interests.filter(
+        interest => b.interests.includes(interest)
+      );
 
-  const text=document.createElement("span");
-  text.textContent=card;
+      let points = common.length * 2;
 
-  const del=document.createElement("button");
-  del.className="small-btn";
-  del.textContent="Eliminar";
+      if (a.answer1 === b.answer1) points += 2;
+      if (a.answer2 === b.answer2) points += 2;
 
-  del.onclick=()=>{
-   custom.splice(i,1);
-   saveData();
-   renderEditorList();
-  };
+      pairs.push({
+        a:a.name,
+        b:b.name,
+        common,
+        points
+      });
+    }
+  }
 
-  row.append(text,del);
-  list.appendChild(row);
- });
+  pairs.sort((a,b) => b.points - a.points);
+
+  results.innerHTML = pairs.map(pair => {
+    const conclusion =
+      pair.points >= 8
+      ? "Comparten varios intereses y respuestas."
+      : pair.points >= 4
+      ? "Tienen algunos puntos en común."
+      : "Pueden descubrir muchas cosas nuevas entre sí.";
+
+    return `
+      <div class="panel">
+        <h3>${escapeHTML(pair.a)} + ${escapeHTML(pair.b)}</h3>
+        <div class="center">
+          <span class="pill">${pair.points} puntos de coincidencia</span>
+        </div>
+        <p><strong>Intereses compartidos:</strong>
+        ${pair.common.length ? pair.common.map(escapeHTML).join(", ") : "Todavía ninguno."}</p>
+        <p>${conclusion}</p>
+      </div>
+    `;
+  }).join("") + `
+    <p class="small">
+      Esta comparación es solo un juego para iniciar conversaciones.
+      No mide la personalidad ni determina si dos personas son compatibles.
+    </p>
+  `;
 }
 
-function addCustomCard(){
- const value=$("newCard").value.trim();
- const mode=$("editorMode").value;
- const level=$("editorLevel").value;
+function clearMatchPeople() {
+  if (!confirm("¿Quieres borrar todos los participantes de Media Naranja?")) return;
 
- if(!value){
-  alert("Escribe primero una tarjeta.");
-  return;
- }
+  savedData.matchPeople = [];
+  saveData();
+  renderMatchPeople();
 
- if(!data.custom[mode])data.custom[mode]={};
- if(!data.custom[mode][level])data.custom[mode][level]={};
- if(!data.custom[mode][level][editorType]){
-  data.custom[mode][level][editorType]=[];
- }
-
- const cards=data.custom[mode][level][editorType];
-
- if(cards.some(x=>x.toLowerCase()===value.toLowerCase())){
-  alert("Esta tarjeta ya existe en tus tarjetas personalizadas.");
-  return;
- }
-
- cards.push(value);
- $("newCard").value="";
-
- saveData();
- renderEditorList();
- alert("¡Tarjeta guardada correctamente!");
+  document.getElementById("matchResults").textContent =
+    "Todavía no hay resultados.";
 }
 
-/* =====================================
-   15. HISTORIAL
-===================================== */
+/* =========================================
+   24. HISTORIAL DE PARTIDAS
+========================================= */
 
-function renderHistory(){
- const list=$("historyList");
- list.innerHTML="";
+function renderHistory() {
+  const container = document.getElementById("historyList");
 
- if(!data.history.length){
-  list.innerHTML='<p class="note">Todavía no hay partidas registradas.</p>';
-  return;
- }
+  if (!savedData.history.length) {
+    container.textContent = "Todavía no hay partidas finalizadas.";
+  } else {
+    container.innerHTML = savedData.history.map(item => `
+      <div class="history-row">
+        <div>
+          <strong>${escapeHTML(item.mode)} · ${escapeHTML(item.level)}</strong>
+          <div class="small">${escapeHTML(item.date)}</div>
+          <div class="small">
+            ${item.ranking.map((p,i) =>
+              (i+1) + ". " + escapeHTML(p.name) +
+              " (" + p.score + ")"
+            ).join(" · ")}
+          </div>
+        </div>
+      </div>
+    `).join("");
+  }
 
- data.history.forEach(item=>{
-  const row=document.createElement("div");
-  row.className="score-row";
-
-  const info=document.createElement("span");
-  const mode=item.mode==="couple"?"Pareja":"Grupal";
-
-  info.textContent=item.date+" · "+mode+" · "+item.level;
-
-  const winner=document.createElement("b");
-  winner.textContent=item.ranking?.[0]?.name||"Sin ganador";
-
-  row.append(info,winner);
-  list.appendChild(row);
- });
+  showScreen("history");
 }
 
-function clearHistory(){
- if(!confirm("¿Borrar todo el historial?"))return;
+function clearHistory() {
+  if (!confirm("¿Seguro que quieres borrar el historial?")) return;
 
- data.history=[];
- saveData();
- renderHistory();
+  savedData.history = [];
+  saveData();
+  renderHistory();
 }
 
-/* =====================================
-   16. PERFIL
-===================================== */
+/* =========================================
+   25. CONFIGURACIÓN Y REINICIO
+========================================= */
 
-function saveProfile(){
- data.profile={
-  name:$("profileName").value.trim(),
-  bio:$("profileBio").value.trim()
- };
+function resetApp() {
+  if (!confirm("Se borrarán el historial, las preguntas personalizadas y los participantes de Media Naranja. ¿Continuar?")) return;
 
- saveData();
- alert("Perfil guardado correctamente.");
-}
-
-/* =====================================
-   17. AJUSTES
-===================================== */
-
-$("motionSetting").addEventListener("change",e=>{
- data.settings.motion=e.target.checked;
- saveData();
- document.body.classList.toggle("no-motion",!e.target.checked);
-});
-
-function resetData(){
- if(!confirm("¿Seguro que quieres borrar todos los datos de VYRA?"))return;
-
- try{
   localStorage.removeItem(STORAGE_KEY);
- }catch(e){
-  alert("No se pudieron borrar los datos.");
-  return;
- }
 
- location.reload();
+  savedData = {
+    custom:[],
+    history:[],
+    matchPeople:[]
+  };
+
+  showScreen("home");
+  alert("Los datos locales de VYRA fueron restablecidos.");
 }
 
-/* =====================================
-   18. INICIALIZACION
-===================================== */
+/* =========================================
+   26. INICIALIZACIÓN
+========================================= */
 
-function initialize(){
- renderEditor();
-
- if(!data.settings.motion){
-  document.body.classList.add("no-motion");
- }
-
- console.log("VYRA 3.0 iniciado correctamente.");
-}
-
-initialize();
+initInterests();
+renderMatchPeople();
 
 </script>
 </body>
